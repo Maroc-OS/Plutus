@@ -1131,14 +1131,6 @@ static CYTHON_INLINE void __Pyx__ExceptionReset(PyThreadState *tstate, PyObject 
 #define __Pyx_ExceptionReset(type, value, tb)  PyErr_SetExcInfo(type, value, tb)
 #endif
 
-/* PyErrExceptionMatches.proto */
-#if CYTHON_FAST_THREAD_STATE
-#define __Pyx_PyErr_ExceptionMatches(err) __Pyx_PyErr_ExceptionMatchesInState(__pyx_tstate, err)
-static CYTHON_INLINE int __Pyx_PyErr_ExceptionMatchesInState(PyThreadState* tstate, PyObject* err);
-#else
-#define __Pyx_PyErr_ExceptionMatches(err)  PyErr_ExceptionMatches(err)
-#endif
-
 /* GetException.proto */
 #if CYTHON_FAST_THREAD_STATE
 #define __Pyx_GetException(type, value, tb)  __Pyx__GetException(__pyx_tstate, type, value, tb)
@@ -1232,6 +1224,14 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_NeObjC(PyObject *op1, PyObject *op2, 
 
 /* Import.proto */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
+
+/* PyErrExceptionMatches.proto */
+#if CYTHON_FAST_THREAD_STATE
+#define __Pyx_PyErr_ExceptionMatches(err) __Pyx_PyErr_ExceptionMatchesInState(__pyx_tstate, err)
+static CYTHON_INLINE int __Pyx_PyErr_ExceptionMatchesInState(PyThreadState* tstate, PyObject* err);
+#else
+#define __Pyx_PyErr_ExceptionMatches(err)  PyErr_ExceptionMatches(err)
+#endif
 
 /* ImportFrom.proto */
 static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name);
@@ -1376,7 +1376,6 @@ static PyObject *__pyx_builtin_enumerate;
 static PyObject *__pyx_builtin_print;
 static PyObject *__pyx_builtin_open;
 static PyObject *__pyx_builtin_range;
-static PyObject *__pyx_builtin_SyntaxError;
 static const char __pyx_k_0[] = "0";
 static const char __pyx_k_a[] = "a";
 static const char __pyx_k_c[] = "_c";
@@ -1402,7 +1401,6 @@ static const char __pyx_k_c_2[] = "c";
 static const char __pyx_k_cpu[] = "cpu";
 static const char __pyx_k_div[] = "div";
 static const char __pyx_k_end[] = "end";
-static const char __pyx_k_i_2[] = "i";
 static const char __pyx_k_mod[] = "mod";
 static const char __pyx_k_new[] = "new";
 static const char __pyx_k_pad[] = "pad";
@@ -1425,6 +1423,7 @@ static const char __pyx_k_chars[] = "chars";
 static const char __pyx_k_count[] = "_count";
 static const char __pyx_k_curve[] = "curve";
 static const char __pyx_k_enter[] = "__enter__";
+static const char __pyx_k_flush[] = "flush";
 static const char __pyx_k_index[] = "index";
 static const char __pyx_k_print[] = "print";
 static const char __pyx_k_range[] = "range";
@@ -1473,7 +1472,6 @@ static const char __pyx_k_Public_key[] = "Public key: ";
 static const char __pyx_k_plutus_txt[] = "plutus.txt";
 static const char __pyx_k_public_key[] = "public_key";
 static const char __pyx_k_ImportError[] = "ImportError";
-static const char __pyx_k_SyntaxError[] = "SyntaxError";
 static const char __pyx_k_private_key[] = "private_key";
 static const char __pyx_k_var_encoded[] = "var_encoded";
 static const char __pyx_k_WIF_PrivateKey[] = "WIF PrivateKey: ";
@@ -1505,7 +1503,6 @@ static PyObject *__pyx_n_s_ImportError;
 static PyObject *__pyx_n_s_Process;
 static PyObject *__pyx_kp_u_Public_key;
 static PyObject *__pyx_n_s_QUARTER;
-static PyObject *__pyx_n_s_SyntaxError;
 static PyObject *__pyx_kp_u_WIF_PrivateKey;
 static PyObject *__pyx_kp_u__2;
 static PyObject *__pyx_kp_u__20;
@@ -1543,6 +1540,7 @@ static PyObject *__pyx_n_s_exit;
 static PyObject *__pyx_n_s_fastecdsa;
 static PyObject *__pyx_n_s_file;
 static PyObject *__pyx_n_s_file_2;
+static PyObject *__pyx_n_s_flush;
 static PyObject *__pyx_n_s_format;
 static PyObject *__pyx_n_s_gen_private_key;
 static PyObject *__pyx_n_s_generate_private_key;
@@ -1551,7 +1549,6 @@ static PyObject *__pyx_n_s_hashlib;
 static PyObject *__pyx_kp_u_hex_PrivateKey;
 static PyObject *__pyx_n_s_hexdigest;
 static PyObject *__pyx_n_s_i;
-static PyObject *__pyx_n_s_i_2;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_index;
 static PyObject *__pyx_n_s_keys;
@@ -1635,7 +1632,7 @@ static PyObject *__pyx_codeobj__17;
 static PyObject *__pyx_codeobj__19;
 /* Late includes */
 
-/* "plutus.py":28
+/* "plutus.py":29
  * 
  * 
  * def generate_private_key():             # <<<<<<<<<<<<<<
@@ -1666,7 +1663,7 @@ static PyObject *__pyx_pf_6plutus_generate_private_key(CYTHON_UNUSED PyObject *_
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("generate_private_key", 0);
 
-  /* "plutus.py":34
+  /* "plutus.py":35
  *     Average Time: 0.0000061659 seconds
  *     """
  *     return keys.gen_private_key(curve.secp256k1)             # <<<<<<<<<<<<<<
@@ -1674,14 +1671,14 @@ static PyObject *__pyx_pf_6plutus_generate_private_key(CYTHON_UNUSED PyObject *_
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_keys); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 34, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_keys); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 35, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_gen_private_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 34, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_gen_private_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 35, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_curve); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 34, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_curve); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 35, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_secp256k1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 34, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_secp256k1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -1697,14 +1694,14 @@ static PyObject *__pyx_pf_6plutus_generate_private_key(CYTHON_UNUSED PyObject *_
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_2, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 34, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 35, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "plutus.py":28
+  /* "plutus.py":29
  * 
  * 
  * def generate_private_key():             # <<<<<<<<<<<<<<
@@ -1726,7 +1723,7 @@ static PyObject *__pyx_pf_6plutus_generate_private_key(CYTHON_UNUSED PyObject *_
   return __pyx_r;
 }
 
-/* "plutus.py":37
+/* "plutus.py":38
  * 
  * 
  * def private_key_to_public_key(private_key):             # <<<<<<<<<<<<<<
@@ -1763,16 +1760,16 @@ static PyObject *__pyx_pf_6plutus_2private_key_to_public_key(CYTHON_UNUSED PyObj
   Py_UCS4 __pyx_t_8;
   __Pyx_RefNannySetupContext("private_key_to_public_key", 0);
 
-  /* "plutus.py":46
+  /* "plutus.py":47
  *     """
  *     # get the public key corresponding to the private key we just generated
  *     _c = int('0x%s' % private_key, 0)             # <<<<<<<<<<<<<<
  *     _d = keys.get_public_key(_c, curve.secp256k1)
  *     return '04%s%s' % ('{0:x}'.format(int(_d.x)), '{0:x}'.format(int(_d.y)))
  */
-  __pyx_t_1 = __Pyx_PyUnicode_FormatSafe(__pyx_kp_u_0x_s, __pyx_v_private_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyUnicode_FormatSafe(__pyx_kp_u_0x_s, __pyx_v_private_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
@@ -1780,27 +1777,27 @@ static PyObject *__pyx_pf_6plutus_2private_key_to_public_key(CYTHON_UNUSED PyObj
   __Pyx_GIVEREF(__pyx_int_0);
   PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_int_0);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&PyInt_Type)), __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&PyInt_Type)), __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v__c = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "plutus.py":47
+  /* "plutus.py":48
  *     # get the public key corresponding to the private key we just generated
  *     _c = int('0x%s' % private_key, 0)
  *     _d = keys.get_public_key(_c, curve.secp256k1)             # <<<<<<<<<<<<<<
  *     return '04%s%s' % ('{0:x}'.format(int(_d.x)), '{0:x}'.format(int(_d.y)))
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_keys); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_keys); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_get_public_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_get_public_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_curve); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_curve); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_secp256k1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_secp256k1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -1818,7 +1815,7 @@ static PyObject *__pyx_pf_6plutus_2private_key_to_public_key(CYTHON_UNUSED PyObj
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_3)) {
     PyObject *__pyx_temp[3] = {__pyx_t_2, __pyx_v__c, __pyx_t_4};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -1827,14 +1824,14 @@ static PyObject *__pyx_pf_6plutus_2private_key_to_public_key(CYTHON_UNUSED PyObj
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
     PyObject *__pyx_temp[3] = {__pyx_t_2, __pyx_v__c, __pyx_t_4};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   } else
   #endif
   {
-    __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 47, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 48, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     if (__pyx_t_2) {
       __Pyx_GIVEREF(__pyx_t_2); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_2); __pyx_t_2 = NULL;
@@ -1845,7 +1842,7 @@ static PyObject *__pyx_pf_6plutus_2private_key_to_public_key(CYTHON_UNUSED PyObj
     __Pyx_GIVEREF(__pyx_t_4);
     PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_5, __pyx_t_4);
     __pyx_t_4 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
@@ -1853,7 +1850,7 @@ static PyObject *__pyx_pf_6plutus_2private_key_to_public_key(CYTHON_UNUSED PyObj
   __pyx_v__d = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "plutus.py":48
+  /* "plutus.py":49
  *     _c = int('0x%s' % private_key, 0)
  *     _d = keys.get_public_key(_c, curve.secp256k1)
  *     return '04%s%s' % ('{0:x}'.format(int(_d.x)), '{0:x}'.format(int(_d.y)))             # <<<<<<<<<<<<<<
@@ -1861,7 +1858,7 @@ static PyObject *__pyx_pf_6plutus_2private_key_to_public_key(CYTHON_UNUSED PyObj
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_7 = 0;
   __pyx_t_8 = 127;
@@ -1869,11 +1866,11 @@ static PyObject *__pyx_pf_6plutus_2private_key_to_public_key(CYTHON_UNUSED PyObj
   __pyx_t_7 += 2;
   __Pyx_GIVEREF(__pyx_kp_u_04);
   PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_kp_u_04);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_0_x, __pyx_n_s_format); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_0_x, __pyx_n_s_format); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v__d, __pyx_n_s_x); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v__d, __pyx_n_s_x); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = __Pyx_PyNumber_Int(__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyNumber_Int(__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_4 = NULL;
@@ -1889,10 +1886,10 @@ static PyObject *__pyx_pf_6plutus_2private_key_to_public_key(CYTHON_UNUSED PyObj
   __pyx_t_3 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 48, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_3), __pyx_empty_unicode); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_3), __pyx_empty_unicode); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_8 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_6) > __pyx_t_8) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_6) : __pyx_t_8;
@@ -1900,11 +1897,11 @@ static PyObject *__pyx_pf_6plutus_2private_key_to_public_key(CYTHON_UNUSED PyObj
   __Pyx_GIVEREF(__pyx_t_6);
   PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_6);
   __pyx_t_6 = 0;
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_0_x, __pyx_n_s_format); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_0_x, __pyx_n_s_format); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v__d, __pyx_n_s_y); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v__d, __pyx_n_s_y); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyNumber_Int(__pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyNumber_Int(__pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -1920,10 +1917,10 @@ static PyObject *__pyx_pf_6plutus_2private_key_to_public_key(CYTHON_UNUSED PyObj
   __pyx_t_6 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_2, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 48, __pyx_L1_error)
+  if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_6), __pyx_empty_unicode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_6), __pyx_empty_unicode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_8 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_3) > __pyx_t_8) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_3) : __pyx_t_8;
@@ -1931,14 +1928,14 @@ static PyObject *__pyx_pf_6plutus_2private_key_to_public_key(CYTHON_UNUSED PyObj
   __Pyx_GIVEREF(__pyx_t_3);
   PyTuple_SET_ITEM(__pyx_t_1, 2, __pyx_t_3);
   __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyUnicode_Join(__pyx_t_1, 3, __pyx_t_7, __pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyUnicode_Join(__pyx_t_1, 3, __pyx_t_7, __pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "plutus.py":37
+  /* "plutus.py":38
  * 
  * 
  * def private_key_to_public_key(private_key):             # <<<<<<<<<<<<<<
@@ -1963,7 +1960,7 @@ static PyObject *__pyx_pf_6plutus_2private_key_to_public_key(CYTHON_UNUSED PyObj
   return __pyx_r;
 }
 
-/* "plutus.py":51
+/* "plutus.py":52
  * 
  * 
  * def public_key_to_address(public_key):             # <<<<<<<<<<<<<<
@@ -2015,22 +2012,21 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
   PyObject *(*__pyx_t_13)(PyObject *);
   int __pyx_t_14;
   Py_UCS4 __pyx_t_15;
-  int __pyx_t_16;
   __Pyx_RefNannySetupContext("public_key_to_address", 0);
 
-  /* "plutus.py":56
+  /* "plutus.py":57
  *     Average Time: 0.0000801390 seconds
  *     """
  *     output = []             # <<<<<<<<<<<<<<
  *     alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
  *     var = hashlib.new('ripemd160')
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_output = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "plutus.py":57
+  /* "plutus.py":58
  *     """
  *     output = []
  *     alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'             # <<<<<<<<<<<<<<
@@ -2040,16 +2036,16 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
   __Pyx_INCREF(__pyx_kp_u_123456789ABCDEFGHJKLMNPQRSTUVWXY);
   __pyx_v_alphabet = __pyx_kp_u_123456789ABCDEFGHJKLMNPQRSTUVWXY;
 
-  /* "plutus.py":58
+  /* "plutus.py":59
  *     output = []
  *     alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
  *     var = hashlib.new('ripemd160')             # <<<<<<<<<<<<<<
  *     try:
  *         encoding = binascii.unhexlify(public_key.encode())
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_hashlib); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 58, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_hashlib); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_new); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 58, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_new); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -2064,13 +2060,13 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_2, __pyx_n_u_ripemd160) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_n_u_ripemd160);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 58, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_var = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "plutus.py":59
+  /* "plutus.py":60
  *     alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
  *     var = hashlib.new('ripemd160')
  *     try:             # <<<<<<<<<<<<<<
@@ -2086,19 +2082,19 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
     __Pyx_XGOTREF(__pyx_t_6);
     /*try:*/ {
 
-      /* "plutus.py":60
+      /* "plutus.py":61
  *     var = hashlib.new('ripemd160')
  *     try:
  *         encoding = binascii.unhexlify(public_key.encode())             # <<<<<<<<<<<<<<
  *         var.update(hashlib.sha256(encoding).digest())
  *         var_encoded = ('00' + var.hexdigest()).encode()
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_binascii); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 60, __pyx_L3_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_binascii); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 61, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_unhexlify); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 60, __pyx_L3_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_unhexlify); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 61, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_public_key, __pyx_n_s_encode); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 60, __pyx_L3_error)
+      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_public_key, __pyx_n_s_encode); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 61, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_7);
       __pyx_t_8 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_7))) {
@@ -2112,7 +2108,7 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
       }
       __pyx_t_3 = (__pyx_t_8) ? __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_8) : __Pyx_PyObject_CallNoArg(__pyx_t_7);
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 60, __pyx_L3_error)
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 61, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __pyx_t_7 = NULL;
@@ -2128,24 +2124,24 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
       __pyx_t_1 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_7, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 60, __pyx_L3_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 61, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_v_encoding = __pyx_t_1;
       __pyx_t_1 = 0;
 
-      /* "plutus.py":61
+      /* "plutus.py":62
  *     try:
  *         encoding = binascii.unhexlify(public_key.encode())
  *         var.update(hashlib.sha256(encoding).digest())             # <<<<<<<<<<<<<<
  *         var_encoded = ('00' + var.hexdigest()).encode()
  *         digest = hashlib.sha256(binascii.unhexlify(var_encoded)).digest()
  */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_var, __pyx_n_s_update); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 61, __pyx_L3_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_var, __pyx_n_s_update); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 62, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_hashlib); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 61, __pyx_L3_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_hashlib); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 62, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_sha256); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 61, __pyx_L3_error)
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_sha256); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 62, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
       __pyx_t_8 = NULL;
@@ -2160,10 +2156,10 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
       }
       __pyx_t_7 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_9, __pyx_t_8, __pyx_v_encoding) : __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_v_encoding);
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 61, __pyx_L3_error)
+      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 62, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_digest); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 61, __pyx_L3_error)
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_digest); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 62, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __pyx_t_7 = NULL;
@@ -2178,7 +2174,7 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
       }
       __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_t_7) : __Pyx_PyObject_CallNoArg(__pyx_t_9);
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 61, __pyx_L3_error)
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 62, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __pyx_t_9 = NULL;
@@ -2194,19 +2190,19 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
       __pyx_t_1 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_9, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
       __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 61, __pyx_L3_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 62, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "plutus.py":62
+      /* "plutus.py":63
  *         encoding = binascii.unhexlify(public_key.encode())
  *         var.update(hashlib.sha256(encoding).digest())
  *         var_encoded = ('00' + var.hexdigest()).encode()             # <<<<<<<<<<<<<<
  *         digest = hashlib.sha256(binascii.unhexlify(var_encoded)).digest()
  *         var_hex = '00' + var.hexdigest() + \
  */
-      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_var, __pyx_n_s_hexdigest); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 62, __pyx_L3_error)
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_var, __pyx_n_s_hexdigest); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 63, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_3);
       __pyx_t_9 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -2220,13 +2216,13 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
       }
       __pyx_t_2 = (__pyx_t_9) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_9) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
       __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 62, __pyx_L3_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 63, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = PyNumber_Add(__pyx_kp_u_00, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 62, __pyx_L3_error)
+      __pyx_t_3 = PyNumber_Add(__pyx_kp_u_00, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 63, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 62, __pyx_L3_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 63, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_t_3 = NULL;
@@ -2241,27 +2237,27 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
       }
       __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 62, __pyx_L3_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 63, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_v_var_encoded = __pyx_t_1;
       __pyx_t_1 = 0;
 
-      /* "plutus.py":63
+      /* "plutus.py":64
  *         var.update(hashlib.sha256(encoding).digest())
  *         var_encoded = ('00' + var.hexdigest()).encode()
  *         digest = hashlib.sha256(binascii.unhexlify(var_encoded)).digest()             # <<<<<<<<<<<<<<
  *         var_hex = '00' + var.hexdigest() + \
  *             hashlib.sha256(digest).hexdigest()[0:8]
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_hashlib); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 63, __pyx_L3_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_hashlib); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 64, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_sha256); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 63, __pyx_L3_error)
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_sha256); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 64, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_binascii); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 63, __pyx_L3_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_binascii); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 64, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_unhexlify); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 63, __pyx_L3_error)
+      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_unhexlify); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 64, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __pyx_t_7 = NULL;
@@ -2276,7 +2272,7 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
       }
       __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_8, __pyx_t_7, __pyx_v_var_encoded) : __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_v_var_encoded);
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 63, __pyx_L3_error)
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 64, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
       __pyx_t_8 = NULL;
@@ -2292,39 +2288,12 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
       __pyx_t_2 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_9, __pyx_t_8, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_t_3);
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 63, __pyx_L3_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 64, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_digest); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 63, __pyx_L3_error)
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_digest); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 64, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = NULL;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_9))) {
-        __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_9);
-        if (likely(__pyx_t_2)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_9);
-          __Pyx_INCREF(__pyx_t_2);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_9, function);
-        }
-      }
-      __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_9);
-      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 63, __pyx_L3_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_v_digest = __pyx_t_1;
-      __pyx_t_1 = 0;
-
-      /* "plutus.py":64
- *         var_encoded = ('00' + var.hexdigest()).encode()
- *         digest = hashlib.sha256(binascii.unhexlify(var_encoded)).digest()
- *         var_hex = '00' + var.hexdigest() + \             # <<<<<<<<<<<<<<
- *             hashlib.sha256(digest).hexdigest()[0:8]
- *         _count = [char != '0' for char in var_hex].index(True) // 2
- */
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_var, __pyx_n_s_hexdigest); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 64, __pyx_L3_error)
-      __Pyx_GOTREF(__pyx_t_9);
       __pyx_t_2 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_9))) {
         __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_9);
@@ -2340,20 +2309,47 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
       if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_9 = PyNumber_Add(__pyx_kp_u_00, __pyx_t_1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 64, __pyx_L3_error)
+      __pyx_v_digest = __pyx_t_1;
+      __pyx_t_1 = 0;
+
+      /* "plutus.py":65
+ *         var_encoded = ('00' + var.hexdigest()).encode()
+ *         digest = hashlib.sha256(binascii.unhexlify(var_encoded)).digest()
+ *         var_hex = '00' + var.hexdigest() + \             # <<<<<<<<<<<<<<
+ *             hashlib.sha256(digest).hexdigest()[0:8]
+ *         _count = [char != '0' for char in var_hex].index(True) // 2
+ */
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_var, __pyx_n_s_hexdigest); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 65, __pyx_L3_error)
+      __Pyx_GOTREF(__pyx_t_9);
+      __pyx_t_2 = NULL;
+      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_9))) {
+        __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_9);
+        if (likely(__pyx_t_2)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_9);
+          __Pyx_INCREF(__pyx_t_2);
+          __Pyx_INCREF(function);
+          __Pyx_DECREF_SET(__pyx_t_9, function);
+        }
+      }
+      __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_9);
+      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L3_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __pyx_t_9 = PyNumber_Add(__pyx_kp_u_00, __pyx_t_1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 65, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "plutus.py":65
+      /* "plutus.py":66
  *         digest = hashlib.sha256(binascii.unhexlify(var_encoded)).digest()
  *         var_hex = '00' + var.hexdigest() + \
  *             hashlib.sha256(digest).hexdigest()[0:8]             # <<<<<<<<<<<<<<
  *         _count = [char != '0' for char in var_hex].index(True) // 2
  *         _n = int(var_hex, 16)
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_hashlib); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 65, __pyx_L3_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_hashlib); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 66, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_sha256); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 65, __pyx_L3_error)
+      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_sha256); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 66, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_t_3 = NULL;
@@ -2368,10 +2364,10 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
       }
       __pyx_t_2 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_8, __pyx_t_3, __pyx_v_digest) : __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_v_digest);
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 65, __pyx_L3_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 66, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_hexdigest); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 65, __pyx_L3_error)
+      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_hexdigest); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 66, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_t_2 = NULL;
@@ -2386,28 +2382,28 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
       }
       __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_8);
       __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L3_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 66, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_8 = __Pyx_PyObject_GetSlice(__pyx_t_1, 0, 8, NULL, NULL, &__pyx_slice_, 1, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 65, __pyx_L3_error)
+      __pyx_t_8 = __Pyx_PyObject_GetSlice(__pyx_t_1, 0, 8, NULL, NULL, &__pyx_slice_, 1, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 66, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "plutus.py":64
+      /* "plutus.py":65
  *         var_encoded = ('00' + var.hexdigest()).encode()
  *         digest = hashlib.sha256(binascii.unhexlify(var_encoded)).digest()
  *         var_hex = '00' + var.hexdigest() + \             # <<<<<<<<<<<<<<
  *             hashlib.sha256(digest).hexdigest()[0:8]
  *         _count = [char != '0' for char in var_hex].index(True) // 2
  */
-      __pyx_t_1 = PyNumber_Add(__pyx_t_9, __pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L3_error)
+      __pyx_t_1 = PyNumber_Add(__pyx_t_9, __pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
       __pyx_v_var_hex = __pyx_t_1;
       __pyx_t_1 = 0;
 
-      /* "plutus.py":66
+      /* "plutus.py":67
  *         var_hex = '00' + var.hexdigest() + \
  *             hashlib.sha256(digest).hexdigest()[0:8]
  *         _count = [char != '0' for char in var_hex].index(True) // 2             # <<<<<<<<<<<<<<
@@ -2415,32 +2411,32 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
  *         while _n > 0:
  */
       { /* enter inner scope */
-        __pyx_t_8 = PyList_New(0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 66, __pyx_L11_error)
+        __pyx_t_8 = PyList_New(0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 67, __pyx_L11_error)
         __Pyx_GOTREF(__pyx_t_8);
         if (likely(PyList_CheckExact(__pyx_v_var_hex)) || PyTuple_CheckExact(__pyx_v_var_hex)) {
           __pyx_t_9 = __pyx_v_var_hex; __Pyx_INCREF(__pyx_t_9); __pyx_t_10 = 0;
           __pyx_t_11 = NULL;
         } else {
-          __pyx_t_10 = -1; __pyx_t_9 = PyObject_GetIter(__pyx_v_var_hex); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 66, __pyx_L11_error)
+          __pyx_t_10 = -1; __pyx_t_9 = PyObject_GetIter(__pyx_v_var_hex); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 67, __pyx_L11_error)
           __Pyx_GOTREF(__pyx_t_9);
-          __pyx_t_11 = Py_TYPE(__pyx_t_9)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 66, __pyx_L11_error)
+          __pyx_t_11 = Py_TYPE(__pyx_t_9)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 67, __pyx_L11_error)
         }
         for (;;) {
           if (likely(!__pyx_t_11)) {
             if (likely(PyList_CheckExact(__pyx_t_9))) {
               if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_9)) break;
               #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-              __pyx_t_2 = PyList_GET_ITEM(__pyx_t_9, __pyx_t_10); __Pyx_INCREF(__pyx_t_2); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 66, __pyx_L11_error)
+              __pyx_t_2 = PyList_GET_ITEM(__pyx_t_9, __pyx_t_10); __Pyx_INCREF(__pyx_t_2); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 67, __pyx_L11_error)
               #else
-              __pyx_t_2 = PySequence_ITEM(__pyx_t_9, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 66, __pyx_L11_error)
+              __pyx_t_2 = PySequence_ITEM(__pyx_t_9, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 67, __pyx_L11_error)
               __Pyx_GOTREF(__pyx_t_2);
               #endif
             } else {
               if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_9)) break;
               #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-              __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_9, __pyx_t_10); __Pyx_INCREF(__pyx_t_2); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 66, __pyx_L11_error)
+              __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_9, __pyx_t_10); __Pyx_INCREF(__pyx_t_2); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 67, __pyx_L11_error)
               #else
-              __pyx_t_2 = PySequence_ITEM(__pyx_t_9, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 66, __pyx_L11_error)
+              __pyx_t_2 = PySequence_ITEM(__pyx_t_9, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 67, __pyx_L11_error)
               __Pyx_GOTREF(__pyx_t_2);
               #endif
             }
@@ -2450,7 +2446,7 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
               PyObject* exc_type = PyErr_Occurred();
               if (exc_type) {
                 if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-                else __PYX_ERR(0, 66, __pyx_L11_error)
+                else __PYX_ERR(0, 67, __pyx_L11_error)
               }
               break;
             }
@@ -2458,8 +2454,8 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
           }
           __Pyx_XDECREF_SET(__pyx_7genexpr__pyx_v_char, __pyx_t_2);
           __pyx_t_2 = 0;
-          __pyx_t_2 = PyObject_RichCompare(__pyx_7genexpr__pyx_v_char, __pyx_kp_u_0, Py_NE); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 66, __pyx_L11_error)
-          if (unlikely(__Pyx_ListComp_Append(__pyx_t_8, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 66, __pyx_L11_error)
+          __pyx_t_2 = PyObject_RichCompare(__pyx_7genexpr__pyx_v_char, __pyx_kp_u_0, Py_NE); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 67, __pyx_L11_error)
+          if (unlikely(__Pyx_ListComp_Append(__pyx_t_8, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 67, __pyx_L11_error)
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         }
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
@@ -2470,7 +2466,7 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
         goto __pyx_L3_error;
         __pyx_L14_exit_scope:;
       } /* exit inner scope */
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_index); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 66, __pyx_L3_error)
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_index); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 67, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
       __pyx_t_8 = NULL;
@@ -2485,23 +2481,23 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
       }
       __pyx_t_1 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_9, __pyx_t_8, Py_True) : __Pyx_PyObject_CallOneArg(__pyx_t_9, Py_True);
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 66, __pyx_L3_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 67, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_9 = __Pyx_PyInt_FloorDivideObjC(__pyx_t_1, __pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 66, __pyx_L3_error)
+      __pyx_t_9 = __Pyx_PyInt_FloorDivideObjC(__pyx_t_1, __pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 67, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_v__count = __pyx_t_9;
       __pyx_t_9 = 0;
 
-      /* "plutus.py":67
+      /* "plutus.py":68
  *             hashlib.sha256(digest).hexdigest()[0:8]
  *         _count = [char != '0' for char in var_hex].index(True) // 2
  *         _n = int(var_hex, 16)             # <<<<<<<<<<<<<<
  *         while _n > 0:
  *             _n, remainder = divmod(_n, 58)
  */
-      __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 67, __pyx_L3_error)
+      __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 68, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_INCREF(__pyx_v_var_hex);
       __Pyx_GIVEREF(__pyx_v_var_hex);
@@ -2509,13 +2505,13 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
       __Pyx_INCREF(__pyx_int_16);
       __Pyx_GIVEREF(__pyx_int_16);
       PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_int_16);
-      __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&PyInt_Type)), __pyx_t_9, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 67, __pyx_L3_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&PyInt_Type)), __pyx_t_9, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __pyx_v__n = __pyx_t_1;
       __pyx_t_1 = 0;
 
-      /* "plutus.py":68
+      /* "plutus.py":69
  *         _count = [char != '0' for char in var_hex].index(True) // 2
  *         _n = int(var_hex, 16)
  *         while _n > 0:             # <<<<<<<<<<<<<<
@@ -2523,19 +2519,19 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
  *             output.append(alphabet[remainder])
  */
       while (1) {
-        __pyx_t_1 = PyObject_RichCompare(__pyx_v__n, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L3_error)
-        __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 68, __pyx_L3_error)
+        __pyx_t_1 = PyObject_RichCompare(__pyx_v__n, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L3_error)
+        __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 69, __pyx_L3_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         if (!__pyx_t_12) break;
 
-        /* "plutus.py":69
+        /* "plutus.py":70
  *         _n = int(var_hex, 16)
  *         while _n > 0:
  *             _n, remainder = divmod(_n, 58)             # <<<<<<<<<<<<<<
  *             output.append(alphabet[remainder])
  *         for _i in range(_count):
  */
-        __pyx_t_1 = PyNumber_Divmod(__pyx_v__n, __pyx_int_58); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L3_error)
+        __pyx_t_1 = PyNumber_Divmod(__pyx_v__n, __pyx_int_58); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 70, __pyx_L3_error)
         __Pyx_GOTREF(__pyx_t_1);
         if ((likely(PyTuple_CheckExact(__pyx_t_1))) || (PyList_CheckExact(__pyx_t_1))) {
           PyObject* sequence = __pyx_t_1;
@@ -2543,7 +2539,7 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
           if (unlikely(size != 2)) {
             if (size > 2) __Pyx_RaiseTooManyValuesError(2);
             else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-            __PYX_ERR(0, 69, __pyx_L3_error)
+            __PYX_ERR(0, 70, __pyx_L3_error)
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
           if (likely(PyTuple_CheckExact(sequence))) {
@@ -2556,15 +2552,15 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
           __Pyx_INCREF(__pyx_t_9);
           __Pyx_INCREF(__pyx_t_8);
           #else
-          __pyx_t_9 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 69, __pyx_L3_error)
+          __pyx_t_9 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 70, __pyx_L3_error)
           __Pyx_GOTREF(__pyx_t_9);
-          __pyx_t_8 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 69, __pyx_L3_error)
+          __pyx_t_8 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 70, __pyx_L3_error)
           __Pyx_GOTREF(__pyx_t_8);
           #endif
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         } else {
           Py_ssize_t index = -1;
-          __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 69, __pyx_L3_error)
+          __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 70, __pyx_L3_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           __pyx_t_13 = Py_TYPE(__pyx_t_2)->tp_iternext;
@@ -2572,7 +2568,7 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
           __Pyx_GOTREF(__pyx_t_9);
           index = 1; __pyx_t_8 = __pyx_t_13(__pyx_t_2); if (unlikely(!__pyx_t_8)) goto __pyx_L17_unpacking_failed;
           __Pyx_GOTREF(__pyx_t_8);
-          if (__Pyx_IternextUnpackEndCheck(__pyx_t_13(__pyx_t_2), 2) < 0) __PYX_ERR(0, 69, __pyx_L3_error)
+          if (__Pyx_IternextUnpackEndCheck(__pyx_t_13(__pyx_t_2), 2) < 0) __PYX_ERR(0, 70, __pyx_L3_error)
           __pyx_t_13 = NULL;
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           goto __pyx_L18_unpacking_done;
@@ -2580,7 +2576,7 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __pyx_t_13 = NULL;
           if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-          __PYX_ERR(0, 69, __pyx_L3_error)
+          __PYX_ERR(0, 70, __pyx_L3_error)
           __pyx_L18_unpacking_done:;
         }
         __Pyx_DECREF_SET(__pyx_v__n, __pyx_t_9);
@@ -2588,35 +2584,35 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
         __Pyx_XDECREF_SET(__pyx_v_remainder, __pyx_t_8);
         __pyx_t_8 = 0;
 
-        /* "plutus.py":70
+        /* "plutus.py":71
  *         while _n > 0:
  *             _n, remainder = divmod(_n, 58)
  *             output.append(alphabet[remainder])             # <<<<<<<<<<<<<<
  *         for _i in range(_count):
  *             output.append(alphabet[0])
  */
-        __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_alphabet, __pyx_v_remainder); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 70, __pyx_L3_error)
+        __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_alphabet, __pyx_v_remainder); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L3_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_14 = __Pyx_PyList_Append(__pyx_v_output, __pyx_t_1); if (unlikely(__pyx_t_14 == ((int)-1))) __PYX_ERR(0, 70, __pyx_L3_error)
+        __pyx_t_14 = __Pyx_PyList_Append(__pyx_v_output, __pyx_t_1); if (unlikely(__pyx_t_14 == ((int)-1))) __PYX_ERR(0, 71, __pyx_L3_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       }
 
-      /* "plutus.py":71
+      /* "plutus.py":72
  *             _n, remainder = divmod(_n, 58)
  *             output.append(alphabet[remainder])
  *         for _i in range(_count):             # <<<<<<<<<<<<<<
  *             output.append(alphabet[0])
  *         return ''.join(output[::-1])
  */
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_v__count); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L3_error)
+      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_v__count); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 72, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
         __pyx_t_8 = __pyx_t_1; __Pyx_INCREF(__pyx_t_8); __pyx_t_10 = 0;
         __pyx_t_11 = NULL;
       } else {
-        __pyx_t_10 = -1; __pyx_t_8 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 71, __pyx_L3_error)
+        __pyx_t_10 = -1; __pyx_t_8 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 72, __pyx_L3_error)
         __Pyx_GOTREF(__pyx_t_8);
-        __pyx_t_11 = Py_TYPE(__pyx_t_8)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 71, __pyx_L3_error)
+        __pyx_t_11 = Py_TYPE(__pyx_t_8)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 72, __pyx_L3_error)
       }
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       for (;;) {
@@ -2624,17 +2620,17 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
           if (likely(PyList_CheckExact(__pyx_t_8))) {
             if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_8)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_1 = PyList_GET_ITEM(__pyx_t_8, __pyx_t_10); __Pyx_INCREF(__pyx_t_1); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 71, __pyx_L3_error)
+            __pyx_t_1 = PyList_GET_ITEM(__pyx_t_8, __pyx_t_10); __Pyx_INCREF(__pyx_t_1); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 72, __pyx_L3_error)
             #else
-            __pyx_t_1 = PySequence_ITEM(__pyx_t_8, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L3_error)
+            __pyx_t_1 = PySequence_ITEM(__pyx_t_8, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 72, __pyx_L3_error)
             __Pyx_GOTREF(__pyx_t_1);
             #endif
           } else {
             if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_8)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_8, __pyx_t_10); __Pyx_INCREF(__pyx_t_1); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 71, __pyx_L3_error)
+            __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_8, __pyx_t_10); __Pyx_INCREF(__pyx_t_1); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 72, __pyx_L3_error)
             #else
-            __pyx_t_1 = PySequence_ITEM(__pyx_t_8, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L3_error)
+            __pyx_t_1 = PySequence_ITEM(__pyx_t_8, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 72, __pyx_L3_error)
             __Pyx_GOTREF(__pyx_t_1);
             #endif
           }
@@ -2644,7 +2640,7 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
               if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-              else __PYX_ERR(0, 71, __pyx_L3_error)
+              else __PYX_ERR(0, 72, __pyx_L3_error)
             }
             break;
           }
@@ -2653,20 +2649,20 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
         __Pyx_XDECREF_SET(__pyx_v__i, __pyx_t_1);
         __pyx_t_1 = 0;
 
-        /* "plutus.py":72
+        /* "plutus.py":73
  *             output.append(alphabet[remainder])
  *         for _i in range(_count):
  *             output.append(alphabet[0])             # <<<<<<<<<<<<<<
  *         return ''.join(output[::-1])
- *     except SyntaxError:
+ *     except:
  */
-        __pyx_t_15 = __Pyx_GetItemInt_Unicode(__pyx_v_alphabet, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(__pyx_t_15 == (Py_UCS4)-1)) __PYX_ERR(0, 72, __pyx_L3_error)
-        __pyx_t_1 = PyUnicode_FromOrdinal(__pyx_t_15); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 72, __pyx_L3_error)
+        __pyx_t_15 = __Pyx_GetItemInt_Unicode(__pyx_v_alphabet, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(__pyx_t_15 == (Py_UCS4)-1)) __PYX_ERR(0, 73, __pyx_L3_error)
+        __pyx_t_1 = PyUnicode_FromOrdinal(__pyx_t_15); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 73, __pyx_L3_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_14 = __Pyx_PyList_Append(__pyx_v_output, __pyx_t_1); if (unlikely(__pyx_t_14 == ((int)-1))) __PYX_ERR(0, 72, __pyx_L3_error)
+        __pyx_t_14 = __Pyx_PyList_Append(__pyx_v_output, __pyx_t_1); if (unlikely(__pyx_t_14 == ((int)-1))) __PYX_ERR(0, 73, __pyx_L3_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "plutus.py":71
+        /* "plutus.py":72
  *             _n, remainder = divmod(_n, 58)
  *             output.append(alphabet[remainder])
  *         for _i in range(_count):             # <<<<<<<<<<<<<<
@@ -2676,24 +2672,24 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
       }
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-      /* "plutus.py":73
+      /* "plutus.py":74
  *         for _i in range(_count):
  *             output.append(alphabet[0])
  *         return ''.join(output[::-1])             # <<<<<<<<<<<<<<
- *     except SyntaxError:
+ *     except:
  *         # Skip if public_key gen caused an error - I think this happens
  */
       __Pyx_XDECREF(__pyx_r);
-      __pyx_t_8 = __Pyx_PyObject_GetItem(__pyx_v_output, __pyx_slice__3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 73, __pyx_L3_error)
+      __pyx_t_8 = __Pyx_PyObject_GetItem(__pyx_v_output, __pyx_slice__3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 74, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_1 = PyUnicode_Join(__pyx_kp_u__2, __pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 73, __pyx_L3_error)
+      __pyx_t_1 = PyUnicode_Join(__pyx_kp_u__2, __pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 74, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
       __pyx_r = __pyx_t_1;
       __pyx_t_1 = 0;
       goto __pyx_L7_try_return;
 
-      /* "plutus.py":59
+      /* "plutus.py":60
  *     alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
  *     var = hashlib.new('ripemd160')
  *     try:             # <<<<<<<<<<<<<<
@@ -2709,22 +2705,21 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
     __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "plutus.py":74
+    /* "plutus.py":75
  *             output.append(alphabet[0])
  *         return ''.join(output[::-1])
- *     except SyntaxError:             # <<<<<<<<<<<<<<
+ *     except:             # <<<<<<<<<<<<<<
  *         # Skip if public_key gen caused an error - I think this happens
  *         # because urandom was smaller than 32 bytes?
  */
-    __pyx_t_16 = __Pyx_PyErr_ExceptionMatches(__pyx_builtin_SyntaxError);
-    if (__pyx_t_16) {
+    /*except:*/ {
       __Pyx_AddTraceback("plutus.public_key_to_address", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_8, &__pyx_t_9) < 0) __PYX_ERR(0, 74, __pyx_L5_except_error)
+      if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_8, &__pyx_t_9) < 0) __PYX_ERR(0, 75, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_GOTREF(__pyx_t_9);
 
-      /* "plutus.py":77
+      /* "plutus.py":78
  *         # Skip if public_key gen caused an error - I think this happens
  *         # because urandom was smaller than 32 bytes?
  *         return -1             # <<<<<<<<<<<<<<
@@ -2739,10 +2734,9 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       goto __pyx_L6_except_return;
     }
-    goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "plutus.py":59
+    /* "plutus.py":60
  *     alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
  *     var = hashlib.new('ripemd160')
  *     try:             # <<<<<<<<<<<<<<
@@ -2768,7 +2762,7 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
     goto __pyx_L0;
   }
 
-  /* "plutus.py":51
+  /* "plutus.py":52
  * 
  * 
  * def public_key_to_address(public_key):             # <<<<<<<<<<<<<<
@@ -2804,7 +2798,7 @@ static PyObject *__pyx_pf_6plutus_4public_key_to_address(CYTHON_UNUSED PyObject 
   return __pyx_r;
 }
 
-/* "plutus.py":80
+/* "plutus.py":81
  * 
  * 
  * def process(private_key, public_key, address, _database):             # <<<<<<<<<<<<<<
@@ -2850,23 +2844,23 @@ static PyObject *__pyx_pw_6plutus_7process(PyObject *__pyx_self, PyObject *__pyx
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_public_key)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("process", 1, 4, 4, 1); __PYX_ERR(0, 80, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("process", 1, 4, 4, 1); __PYX_ERR(0, 81, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_address)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("process", 1, 4, 4, 2); __PYX_ERR(0, 80, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("process", 1, 4, 4, 2); __PYX_ERR(0, 81, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_database)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("process", 1, 4, 4, 3); __PYX_ERR(0, 80, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("process", 1, 4, 4, 3); __PYX_ERR(0, 81, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "process") < 0)) __PYX_ERR(0, 80, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "process") < 0)) __PYX_ERR(0, 81, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
@@ -2883,7 +2877,7 @@ static PyObject *__pyx_pw_6plutus_7process(PyObject *__pyx_self, PyObject *__pyx
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("process", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 80, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("process", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 81, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("plutus.process", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2916,16 +2910,16 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
   PyObject *__pyx_t_14 = NULL;
   __Pyx_RefNannySetupContext("process", 0);
 
-  /* "plutus.py":88
+  /* "plutus.py":89
  *     Average Time: 0.0000026941 seconds
  *     """
  *     if address in _database[0] or \             # <<<<<<<<<<<<<<
  *        address in _database[1] or \
  *        address in _database[2] or \
  */
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v__database, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 88, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v__database, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 89, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = (__Pyx_PySequence_ContainsTF(__pyx_v_address, __pyx_t_2, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 88, __pyx_L1_error)
+  __pyx_t_3 = (__Pyx_PySequence_ContainsTF(__pyx_v_address, __pyx_t_2, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 89, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_4 = (__pyx_t_3 != 0);
   if (!__pyx_t_4) {
@@ -2934,16 +2928,16 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
     goto __pyx_L4_bool_binop_done;
   }
 
-  /* "plutus.py":89
+  /* "plutus.py":90
  *     """
  *     if address in _database[0] or \
  *        address in _database[1] or \             # <<<<<<<<<<<<<<
  *        address in _database[2] or \
  *        address in _database[3] or \
  */
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v__database, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 89, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v__database, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 90, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = (__Pyx_PySequence_ContainsTF(__pyx_v_address, __pyx_t_2, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 89, __pyx_L1_error)
+  __pyx_t_4 = (__Pyx_PySequence_ContainsTF(__pyx_v_address, __pyx_t_2, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 90, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_3 = (__pyx_t_4 != 0);
   if (!__pyx_t_3) {
@@ -2952,16 +2946,16 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
     goto __pyx_L4_bool_binop_done;
   }
 
-  /* "plutus.py":90
+  /* "plutus.py":91
  *     if address in _database[0] or \
  *        address in _database[1] or \
  *        address in _database[2] or \             # <<<<<<<<<<<<<<
  *        address in _database[3] or \
  *        address in _database[4]:
  */
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v__database, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 90, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v__database, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 91, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = (__Pyx_PySequence_ContainsTF(__pyx_v_address, __pyx_t_2, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 90, __pyx_L1_error)
+  __pyx_t_3 = (__Pyx_PySequence_ContainsTF(__pyx_v_address, __pyx_t_2, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 91, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_4 = (__pyx_t_3 != 0);
   if (!__pyx_t_4) {
@@ -2970,16 +2964,16 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
     goto __pyx_L4_bool_binop_done;
   }
 
-  /* "plutus.py":91
+  /* "plutus.py":92
  *        address in _database[1] or \
  *        address in _database[2] or \
  *        address in _database[3] or \             # <<<<<<<<<<<<<<
  *        address in _database[4]:
  *         with open('plutus.txt', 'a') as _file:
  */
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v__database, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 91, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v__database, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 92, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = (__Pyx_PySequence_ContainsTF(__pyx_v_address, __pyx_t_2, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 91, __pyx_L1_error)
+  __pyx_t_4 = (__Pyx_PySequence_ContainsTF(__pyx_v_address, __pyx_t_2, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 92, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_3 = (__pyx_t_4 != 0);
   if (!__pyx_t_3) {
@@ -2988,22 +2982,22 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
     goto __pyx_L4_bool_binop_done;
   }
 
-  /* "plutus.py":92
+  /* "plutus.py":93
  *        address in _database[2] or \
  *        address in _database[3] or \
  *        address in _database[4]:             # <<<<<<<<<<<<<<
  *         with open('plutus.txt', 'a') as _file:
  *             _file.write('hex PrivateKey: ' + str(private_key) + '\n' +
  */
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v__database, 4, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 92, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v__database, 4, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = (__Pyx_PySequence_ContainsTF(__pyx_v_address, __pyx_t_2, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 92, __pyx_L1_error)
+  __pyx_t_3 = (__Pyx_PySequence_ContainsTF(__pyx_v_address, __pyx_t_2, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_4 = (__pyx_t_3 != 0);
   __pyx_t_1 = __pyx_t_4;
   __pyx_L4_bool_binop_done:;
 
-  /* "plutus.py":88
+  /* "plutus.py":89
  *     Average Time: 0.0000026941 seconds
  *     """
  *     if address in _database[0] or \             # <<<<<<<<<<<<<<
@@ -3012,7 +3006,7 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
  */
   if (__pyx_t_1) {
 
-    /* "plutus.py":93
+    /* "plutus.py":94
  *        address in _database[3] or \
  *        address in _database[4]:
  *         with open('plutus.txt', 'a') as _file:             # <<<<<<<<<<<<<<
@@ -3020,11 +3014,11 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
  *                         'WIF PrivateKey: ' + str(private_key_to_wif(private_key)) + '\n' +
  */
     /*with:*/ {
-      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_open, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 93, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_open, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 94, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_5 = __Pyx_PyObject_LookupSpecial(__pyx_t_2, __pyx_n_s_exit); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 93, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_LookupSpecial(__pyx_t_2, __pyx_n_s_exit); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 94, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_7 = __Pyx_PyObject_LookupSpecial(__pyx_t_2, __pyx_n_s_enter); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 93, __pyx_L9_error)
+      __pyx_t_7 = __Pyx_PyObject_LookupSpecial(__pyx_t_2, __pyx_n_s_enter); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 94, __pyx_L9_error)
       __Pyx_GOTREF(__pyx_t_7);
       __pyx_t_8 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_7))) {
@@ -3038,7 +3032,7 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
       }
       __pyx_t_6 = (__pyx_t_8) ? __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_8) : __Pyx_PyObject_CallNoArg(__pyx_t_7);
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 93, __pyx_L9_error)
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 94, __pyx_L9_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __pyx_t_7 = __pyx_t_6;
@@ -3056,35 +3050,35 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
             __pyx_v__file = __pyx_t_7;
             __pyx_t_7 = 0;
 
-            /* "plutus.py":94
+            /* "plutus.py":95
  *        address in _database[4]:
  *         with open('plutus.txt', 'a') as _file:
  *             _file.write('hex PrivateKey: ' + str(private_key) + '\n' +             # <<<<<<<<<<<<<<
  *                         'WIF PrivateKey: ' + str(private_key_to_wif(private_key)) + '\n' +
  *                         'Public key: ' + str(public_key) + '\n' +
  */
-            __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v__file, __pyx_n_s_write); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 94, __pyx_L13_error)
+            __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v__file, __pyx_n_s_write); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 95, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_2);
-            __pyx_t_6 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_v_private_key); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 94, __pyx_L13_error)
+            __pyx_t_6 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_v_private_key); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 95, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_6);
-            __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_kp_u_hex_PrivateKey, __pyx_t_6); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 94, __pyx_L13_error)
+            __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_kp_u_hex_PrivateKey, __pyx_t_6); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 95, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_8);
             __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-            __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_t_8, __pyx_kp_u__5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 94, __pyx_L13_error)
+            __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_t_8, __pyx_kp_u__5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 95, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_6);
             __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-            __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_t_6, __pyx_kp_u_WIF_PrivateKey); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 94, __pyx_L13_error)
+            __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_t_6, __pyx_kp_u_WIF_PrivateKey); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 95, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_8);
             __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-            /* "plutus.py":95
+            /* "plutus.py":96
  *         with open('plutus.txt', 'a') as _file:
  *             _file.write('hex PrivateKey: ' + str(private_key) + '\n' +
  *                         'WIF PrivateKey: ' + str(private_key_to_wif(private_key)) + '\n' +             # <<<<<<<<<<<<<<
  *                         'Public key: ' + str(public_key) + '\n' +
  *                         'address: ' + str(address) + '\n\n')
  */
-            __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_private_key_to_wif); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 95, __pyx_L13_error)
+            __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_private_key_to_wif); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 96, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_12);
             __pyx_t_13 = NULL;
             if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -3098,57 +3092,57 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
             }
             __pyx_t_6 = (__pyx_t_13) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_13, __pyx_v_private_key) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_v_private_key);
             __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
-            if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 95, __pyx_L13_error)
+            if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 96, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_6);
             __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-            __pyx_t_12 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_6); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 95, __pyx_L13_error)
+            __pyx_t_12 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_6); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 96, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_12);
             __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-            __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_t_8, __pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 95, __pyx_L13_error)
+            __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_t_8, __pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 96, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_6);
             __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
             __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-            __pyx_t_12 = __Pyx_PyUnicode_Concat(__pyx_t_6, __pyx_kp_u__5); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 95, __pyx_L13_error)
+            __pyx_t_12 = __Pyx_PyUnicode_Concat(__pyx_t_6, __pyx_kp_u__5); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 96, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_12);
             __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-            __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_t_12, __pyx_kp_u_Public_key); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 95, __pyx_L13_error)
+            __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_t_12, __pyx_kp_u_Public_key); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 96, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_6);
             __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
-            /* "plutus.py":96
+            /* "plutus.py":97
  *             _file.write('hex PrivateKey: ' + str(private_key) + '\n' +
  *                         'WIF PrivateKey: ' + str(private_key_to_wif(private_key)) + '\n' +
  *                         'Public key: ' + str(public_key) + '\n' +             # <<<<<<<<<<<<<<
  *                         'address: ' + str(address) + '\n\n')
  *     else:
  */
-            __pyx_t_12 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_v_public_key); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 96, __pyx_L13_error)
+            __pyx_t_12 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_v_public_key); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 97, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_12);
-            __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_t_6, __pyx_t_12); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 96, __pyx_L13_error)
+            __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_t_6, __pyx_t_12); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 97, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_8);
             __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
             __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-            __pyx_t_12 = __Pyx_PyUnicode_Concat(__pyx_t_8, __pyx_kp_u__5); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 96, __pyx_L13_error)
+            __pyx_t_12 = __Pyx_PyUnicode_Concat(__pyx_t_8, __pyx_kp_u__5); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 97, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_12);
             __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-            __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_t_12, __pyx_kp_u_address_2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 96, __pyx_L13_error)
+            __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_t_12, __pyx_kp_u_address_2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 97, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_8);
             __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
-            /* "plutus.py":97
+            /* "plutus.py":98
  *                         'WIF PrivateKey: ' + str(private_key_to_wif(private_key)) + '\n' +
  *                         'Public key: ' + str(public_key) + '\n' +
  *                         'address: ' + str(address) + '\n\n')             # <<<<<<<<<<<<<<
  *     else:
  *         # Is printing every address slowing the process down since it has to
  */
-            __pyx_t_12 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_v_address); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 97, __pyx_L13_error)
+            __pyx_t_12 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_v_address); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 98, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_12);
-            __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_t_8, __pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 97, __pyx_L13_error)
+            __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_t_8, __pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 98, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_6);
             __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
             __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-            __pyx_t_12 = __Pyx_PyUnicode_Concat(__pyx_t_6, __pyx_kp_u__6); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 97, __pyx_L13_error)
+            __pyx_t_12 = __Pyx_PyUnicode_Concat(__pyx_t_6, __pyx_kp_u__6); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 98, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_12);
             __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
             __pyx_t_6 = NULL;
@@ -3164,12 +3158,12 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
             __pyx_t_7 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_6, __pyx_t_12) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_12);
             __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
             __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-            if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 94, __pyx_L13_error)
+            if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 95, __pyx_L13_error)
             __Pyx_GOTREF(__pyx_t_7);
             __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
             __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-            /* "plutus.py":93
+            /* "plutus.py":94
  *        address in _database[3] or \
  *        address in _database[4]:
  *         with open('plutus.txt', 'a') as _file:             # <<<<<<<<<<<<<<
@@ -3190,20 +3184,20 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
           __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
           /*except:*/ {
             __Pyx_AddTraceback("plutus.process", __pyx_clineno, __pyx_lineno, __pyx_filename);
-            if (__Pyx_GetException(&__pyx_t_7, &__pyx_t_2, &__pyx_t_12) < 0) __PYX_ERR(0, 93, __pyx_L15_except_error)
+            if (__Pyx_GetException(&__pyx_t_7, &__pyx_t_2, &__pyx_t_12) < 0) __PYX_ERR(0, 94, __pyx_L15_except_error)
             __Pyx_GOTREF(__pyx_t_7);
             __Pyx_GOTREF(__pyx_t_2);
             __Pyx_GOTREF(__pyx_t_12);
-            __pyx_t_6 = PyTuple_Pack(3, __pyx_t_7, __pyx_t_2, __pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 93, __pyx_L15_except_error)
+            __pyx_t_6 = PyTuple_Pack(3, __pyx_t_7, __pyx_t_2, __pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 94, __pyx_L15_except_error)
             __Pyx_GOTREF(__pyx_t_6);
             __pyx_t_14 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_6, NULL);
             __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
             __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-            if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 93, __pyx_L15_except_error)
+            if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 94, __pyx_L15_except_error)
             __Pyx_GOTREF(__pyx_t_14);
             __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_14);
             __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            if (__pyx_t_1 < 0) __PYX_ERR(0, 93, __pyx_L15_except_error)
+            if (__pyx_t_1 < 0) __PYX_ERR(0, 94, __pyx_L15_except_error)
             __pyx_t_4 = ((!(__pyx_t_1 != 0)) != 0);
             if (__pyx_t_4) {
               __Pyx_GIVEREF(__pyx_t_7);
@@ -3211,7 +3205,7 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
               __Pyx_XGIVEREF(__pyx_t_12);
               __Pyx_ErrRestoreWithState(__pyx_t_7, __pyx_t_2, __pyx_t_12);
               __pyx_t_7 = 0; __pyx_t_2 = 0; __pyx_t_12 = 0; 
-              __PYX_ERR(0, 93, __pyx_L15_except_error)
+              __PYX_ERR(0, 94, __pyx_L15_except_error)
             }
             __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
             __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -3237,7 +3231,7 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
           if (__pyx_t_5) {
             __pyx_t_11 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_tuple__7, NULL);
             __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-            if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 93, __pyx_L1_error)
+            if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 94, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_11);
             __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
           }
@@ -3252,7 +3246,7 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
       __pyx_L22:;
     }
 
-    /* "plutus.py":88
+    /* "plutus.py":89
  *     Average Time: 0.0000026941 seconds
  *     """
  *     if address in _database[0] or \             # <<<<<<<<<<<<<<
@@ -3262,28 +3256,29 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
     goto __pyx_L3;
   }
 
-  /* "plutus.py":102
+  /* "plutus.py":103
  *         # write to STDOUT?
  *         # print(str(private_key),":",str(address))
- *         print('\r' + str(address), end="")             # <<<<<<<<<<<<<<
+ *         print('\r' + str(address), end='', flush=True)             # <<<<<<<<<<<<<<
  * 
  * 
  */
   /*else*/ {
-    __pyx_t_12 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_v_address); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 102, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_v_address); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 103, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_kp_u__8, __pyx_t_12); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 102, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_kp_u__8, __pyx_t_12); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 103, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_12 = PyTuple_New(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 102, __pyx_L1_error)
+    __pyx_t_12 = PyTuple_New(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 103, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_GIVEREF(__pyx_t_2);
     PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_t_2);
     __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 102, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 103, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_end, __pyx_kp_u__2) < 0) __PYX_ERR(0, 102, __pyx_L1_error)
-    __pyx_t_7 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_t_12, __pyx_t_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 102, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_end, __pyx_kp_u__2) < 0) __PYX_ERR(0, 103, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 103, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_t_12, __pyx_t_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 103, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -3291,7 +3286,7 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
   }
   __pyx_L3:;
 
-  /* "plutus.py":80
+  /* "plutus.py":81
  * 
  * 
  * def process(private_key, public_key, address, _database):             # <<<<<<<<<<<<<<
@@ -3318,7 +3313,7 @@ static PyObject *__pyx_pf_6plutus_6process(CYTHON_UNUSED PyObject *__pyx_self, P
   return __pyx_r;
 }
 
-/* "plutus.py":105
+/* "plutus.py":106
  * 
  * 
  * def private_key_to_wif(private_key):             # <<<<<<<<<<<<<<
@@ -3348,7 +3343,7 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
   PyObject *__pyx_v_value = NULL;
   PyObject *__pyx_v_pad = NULL;
   PyObject *__pyx_v_result = NULL;
-  PyObject *__pyx_v_i = NULL;
+  PyObject *__pyx_v__i = NULL;
   PyObject *__pyx_v__c = NULL;
   PyObject *__pyx_v_div = NULL;
   PyObject *__pyx_v_mod = NULL;
@@ -3368,24 +3363,24 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
   Py_UCS4 __pyx_t_12;
   __Pyx_RefNannySetupContext("private_key_to_wif", 0);
 
-  /* "plutus.py":112
+  /* "plutus.py":113
  *     main pipeline of the program and is not timed.
  *     """
  *     digest = hashlib.sha256(binascii.unhexlify('80' + private_key)).hexdigest()             # <<<<<<<<<<<<<<
  *     var = hashlib.sha256(binascii.unhexlify(digest)).hexdigest()
  *     var = binascii.unhexlify('80' + private_key + var[0:8])
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_hashlib); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 112, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_hashlib); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_sha256); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 112, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_sha256); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_binascii); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 112, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_binascii); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_unhexlify); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 112, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_unhexlify); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyNumber_Add(__pyx_kp_u_80, __pyx_v_private_key); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 112, __pyx_L1_error)
+  __pyx_t_5 = PyNumber_Add(__pyx_kp_u_80, __pyx_v_private_key); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_7 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -3400,7 +3395,7 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
   __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_7, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_5);
   __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 112, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_6 = NULL;
@@ -3416,10 +3411,10 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
   __pyx_t_2 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3);
   __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 112, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_hexdigest); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 112, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_hexdigest); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -3434,27 +3429,27 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 112, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_digest = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "plutus.py":113
+  /* "plutus.py":114
  *     """
  *     digest = hashlib.sha256(binascii.unhexlify('80' + private_key)).hexdigest()
  *     var = hashlib.sha256(binascii.unhexlify(digest)).hexdigest()             # <<<<<<<<<<<<<<
  *     var = binascii.unhexlify('80' + private_key + var[0:8])
  *     alphabet = chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_hashlib); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 113, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_hashlib); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 114, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_sha256); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 113, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_sha256); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 114, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_binascii); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 113, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_binascii); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 114, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_unhexlify); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 113, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_unhexlify); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 114, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_6 = NULL;
@@ -3469,7 +3464,7 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
   }
   __pyx_t_2 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_6, __pyx_v_digest) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_digest);
   __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 113, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 114, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_5 = NULL;
@@ -3485,10 +3480,10 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
   __pyx_t_4 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_5, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
   __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 113, __pyx_L1_error)
+  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 114, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_hexdigest); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 113, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_hexdigest); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 114, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_4 = NULL;
@@ -3503,29 +3498,29 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
   }
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 113, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 114, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_var = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "plutus.py":114
+  /* "plutus.py":115
  *     digest = hashlib.sha256(binascii.unhexlify('80' + private_key)).hexdigest()
  *     var = hashlib.sha256(binascii.unhexlify(digest)).hexdigest()
  *     var = binascii.unhexlify('80' + private_key + var[0:8])             # <<<<<<<<<<<<<<
  *     alphabet = chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
  *     value = pad = 0
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_binascii); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 114, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_binascii); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 115, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_unhexlify); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 114, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_unhexlify); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 115, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyNumber_Add(__pyx_kp_u_80, __pyx_v_private_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 114, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Add(__pyx_kp_u_80, __pyx_v_private_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 115, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetSlice(__pyx_v_var, 0, 8, NULL, NULL, &__pyx_slice_, 1, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 114, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetSlice(__pyx_v_var, 0, 8, NULL, NULL, &__pyx_slice_, 1, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = PyNumber_Add(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 114, __pyx_L1_error)
+  __pyx_t_5 = PyNumber_Add(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 115, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -3542,13 +3537,13 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_2, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 114, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 115, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF_SET(__pyx_v_var, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "plutus.py":115
+  /* "plutus.py":116
  *     var = hashlib.sha256(binascii.unhexlify(digest)).hexdigest()
  *     var = binascii.unhexlify('80' + private_key + var[0:8])
  *     alphabet = chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'             # <<<<<<<<<<<<<<
@@ -3560,46 +3555,46 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
   __Pyx_INCREF(__pyx_kp_u_123456789ABCDEFGHJKLMNPQRSTUVWXY);
   __pyx_v_chars = __pyx_kp_u_123456789ABCDEFGHJKLMNPQRSTUVWXY;
 
-  /* "plutus.py":116
+  /* "plutus.py":117
  *     var = binascii.unhexlify('80' + private_key + var[0:8])
  *     alphabet = chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
  *     value = pad = 0             # <<<<<<<<<<<<<<
  *     result = ''
- *     for i, _c in enumerate(var[::-1]):
+ *     for _i, _c in enumerate(var[::-1]):
  */
   __Pyx_INCREF(__pyx_int_0);
   __pyx_v_value = __pyx_int_0;
   __Pyx_INCREF(__pyx_int_0);
   __pyx_v_pad = __pyx_int_0;
 
-  /* "plutus.py":117
+  /* "plutus.py":118
  *     alphabet = chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
  *     value = pad = 0
  *     result = ''             # <<<<<<<<<<<<<<
- *     for i, _c in enumerate(var[::-1]):
- *         value += 256**i * _c
+ *     for _i, _c in enumerate(var[::-1]):
+ *         value += 256**_i * _c
  */
   __Pyx_INCREF(__pyx_kp_u__2);
   __pyx_v_result = __pyx_kp_u__2;
 
-  /* "plutus.py":118
+  /* "plutus.py":119
  *     value = pad = 0
  *     result = ''
- *     for i, _c in enumerate(var[::-1]):             # <<<<<<<<<<<<<<
- *         value += 256**i * _c
+ *     for _i, _c in enumerate(var[::-1]):             # <<<<<<<<<<<<<<
+ *         value += 256**_i * _c
  *     while value >= len(alphabet):
  */
   __Pyx_INCREF(__pyx_int_0);
   __pyx_t_1 = __pyx_int_0;
-  __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_v_var, __pyx_slice__3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 118, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_v_var, __pyx_slice__3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 119, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
     __pyx_t_5 = __pyx_t_4; __Pyx_INCREF(__pyx_t_5); __pyx_t_8 = 0;
     __pyx_t_9 = NULL;
   } else {
-    __pyx_t_8 = -1; __pyx_t_5 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 118, __pyx_L1_error)
+    __pyx_t_8 = -1; __pyx_t_5 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 119, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_9 = Py_TYPE(__pyx_t_5)->tp_iternext; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 118, __pyx_L1_error)
+    __pyx_t_9 = Py_TYPE(__pyx_t_5)->tp_iternext; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 119, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   for (;;) {
@@ -3607,17 +3602,17 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
       if (likely(PyList_CheckExact(__pyx_t_5))) {
         if (__pyx_t_8 >= PyList_GET_SIZE(__pyx_t_5)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_5, __pyx_t_8); __Pyx_INCREF(__pyx_t_4); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 118, __pyx_L1_error)
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_5, __pyx_t_8); __Pyx_INCREF(__pyx_t_4); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 119, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_5, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 118, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_5, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 119, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
         if (__pyx_t_8 >= PyTuple_GET_SIZE(__pyx_t_5)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_5, __pyx_t_8); __Pyx_INCREF(__pyx_t_4); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 118, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_5, __pyx_t_8); __Pyx_INCREF(__pyx_t_4); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 119, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_5, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 118, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_5, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 119, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
@@ -3627,7 +3622,7 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 118, __pyx_L1_error)
+          else __PYX_ERR(0, 119, __pyx_L1_error)
         }
         break;
       }
@@ -3636,70 +3631,70 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
     __Pyx_XDECREF_SET(__pyx_v__c, __pyx_t_4);
     __pyx_t_4 = 0;
     __Pyx_INCREF(__pyx_t_1);
-    __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_1);
-    __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_t_1, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 118, __pyx_L1_error)
+    __Pyx_XDECREF_SET(__pyx_v__i, __pyx_t_1);
+    __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_t_1, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 119, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1);
     __pyx_t_1 = __pyx_t_4;
     __pyx_t_4 = 0;
 
-    /* "plutus.py":119
+    /* "plutus.py":120
  *     result = ''
- *     for i, _c in enumerate(var[::-1]):
- *         value += 256**i * _c             # <<<<<<<<<<<<<<
+ *     for _i, _c in enumerate(var[::-1]):
+ *         value += 256**_i * _c             # <<<<<<<<<<<<<<
  *     while value >= len(alphabet):
  *         div, mod = divmod(value, len(alphabet))
  */
-    __pyx_t_4 = PyNumber_Power(__pyx_int_256, __pyx_v_i, Py_None); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 119, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_Power(__pyx_int_256, __pyx_v__i, Py_None); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 120, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_2 = PyNumber_Multiply(__pyx_t_4, __pyx_v__c); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 119, __pyx_L1_error)
+    __pyx_t_2 = PyNumber_Multiply(__pyx_t_4, __pyx_v__c); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 120, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyNumber_InPlaceAdd(__pyx_v_value, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 119, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_InPlaceAdd(__pyx_v_value, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 120, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF_SET(__pyx_v_value, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "plutus.py":118
+    /* "plutus.py":119
  *     value = pad = 0
  *     result = ''
- *     for i, _c in enumerate(var[::-1]):             # <<<<<<<<<<<<<<
- *         value += 256**i * _c
+ *     for _i, _c in enumerate(var[::-1]):             # <<<<<<<<<<<<<<
+ *         value += 256**_i * _c
  *     while value >= len(alphabet):
  */
   }
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "plutus.py":120
- *     for i, _c in enumerate(var[::-1]):
- *         value += 256**i * _c
+  /* "plutus.py":121
+ *     for _i, _c in enumerate(var[::-1]):
+ *         value += 256**_i * _c
  *     while value >= len(alphabet):             # <<<<<<<<<<<<<<
  *         div, mod = divmod(value, len(alphabet))
  *         result, value = chars[mod] + result, div
  */
   while (1) {
-    __pyx_t_8 = __Pyx_PyUnicode_GET_LENGTH(__pyx_v_alphabet); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 120, __pyx_L1_error)
-    __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 120, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyUnicode_GET_LENGTH(__pyx_v_alphabet); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 121, __pyx_L1_error)
+    __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_5 = PyObject_RichCompare(__pyx_v_value, __pyx_t_1, Py_GE); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 120, __pyx_L1_error)
+    __pyx_t_5 = PyObject_RichCompare(__pyx_v_value, __pyx_t_1, Py_GE); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 120, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     if (!__pyx_t_10) break;
 
-    /* "plutus.py":121
- *         value += 256**i * _c
+    /* "plutus.py":122
+ *         value += 256**_i * _c
  *     while value >= len(alphabet):
  *         div, mod = divmod(value, len(alphabet))             # <<<<<<<<<<<<<<
  *         result, value = chars[mod] + result, div
  *     result = chars[value] + result
  */
-    __pyx_t_8 = __Pyx_PyUnicode_GET_LENGTH(__pyx_v_alphabet); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 121, __pyx_L1_error)
-    __pyx_t_5 = PyInt_FromSsize_t(__pyx_t_8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 121, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyUnicode_GET_LENGTH(__pyx_v_alphabet); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 122, __pyx_L1_error)
+    __pyx_t_5 = PyInt_FromSsize_t(__pyx_t_8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 122, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_1 = PyNumber_Divmod(__pyx_v_value, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 121, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Divmod(__pyx_v_value, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 122, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     if ((likely(PyTuple_CheckExact(__pyx_t_1))) || (PyList_CheckExact(__pyx_t_1))) {
@@ -3708,7 +3703,7 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
       if (unlikely(size != 2)) {
         if (size > 2) __Pyx_RaiseTooManyValuesError(2);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 121, __pyx_L1_error)
+        __PYX_ERR(0, 122, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       if (likely(PyTuple_CheckExact(sequence))) {
@@ -3721,15 +3716,15 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
       __Pyx_INCREF(__pyx_t_5);
       __Pyx_INCREF(__pyx_t_4);
       #else
-      __pyx_t_5 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 121, __pyx_L1_error)
+      __pyx_t_5 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 122, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_4 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 121, __pyx_L1_error)
+      __pyx_t_4 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 122, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       #endif
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     } else {
       Py_ssize_t index = -1;
-      __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 121, __pyx_L1_error)
+      __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 122, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_t_11 = Py_TYPE(__pyx_t_2)->tp_iternext;
@@ -3737,7 +3732,7 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
       __Pyx_GOTREF(__pyx_t_5);
       index = 1; __pyx_t_4 = __pyx_t_11(__pyx_t_2); if (unlikely(!__pyx_t_4)) goto __pyx_L7_unpacking_failed;
       __Pyx_GOTREF(__pyx_t_4);
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_11(__pyx_t_2), 2) < 0) __PYX_ERR(0, 121, __pyx_L1_error)
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_11(__pyx_t_2), 2) < 0) __PYX_ERR(0, 122, __pyx_L1_error)
       __pyx_t_11 = NULL;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       goto __pyx_L8_unpacking_done;
@@ -3745,7 +3740,7 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_t_11 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      __PYX_ERR(0, 121, __pyx_L1_error)
+      __PYX_ERR(0, 122, __pyx_L1_error)
       __pyx_L8_unpacking_done:;
     }
     __Pyx_XDECREF_SET(__pyx_v_div, __pyx_t_5);
@@ -3753,19 +3748,19 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
     __Pyx_XDECREF_SET(__pyx_v_mod, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "plutus.py":122
+    /* "plutus.py":123
  *     while value >= len(alphabet):
  *         div, mod = divmod(value, len(alphabet))
  *         result, value = chars[mod] + result, div             # <<<<<<<<<<<<<<
  *     result = chars[value] + result
  *     for _c in var:
  */
-    __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_chars, __pyx_v_mod); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 122, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_chars, __pyx_v_mod); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 123, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_v_result); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 122, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_v_result); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 123, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (!(likely(PyUnicode_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 122, __pyx_L1_error)
+    if (!(likely(PyUnicode_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 123, __pyx_L1_error)
     __pyx_t_1 = __pyx_v_div;
     __Pyx_INCREF(__pyx_t_1);
     __Pyx_DECREF_SET(__pyx_v_result, ((PyObject*)__pyx_t_4));
@@ -3774,23 +3769,23 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
     __pyx_t_1 = 0;
   }
 
-  /* "plutus.py":123
+  /* "plutus.py":124
  *         div, mod = divmod(value, len(alphabet))
  *         result, value = chars[mod] + result, div
  *     result = chars[value] + result             # <<<<<<<<<<<<<<
  *     for _c in var:
  *         if _c == 0:
  */
-  __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_chars, __pyx_v_value); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 123, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_chars, __pyx_v_value); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_v_result); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 123, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_v_result); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (!(likely(PyUnicode_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 123, __pyx_L1_error)
+  if (!(likely(PyUnicode_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_DECREF_SET(__pyx_v_result, ((PyObject*)__pyx_t_4));
   __pyx_t_4 = 0;
 
-  /* "plutus.py":124
+  /* "plutus.py":125
  *         result, value = chars[mod] + result, div
  *     result = chars[value] + result
  *     for _c in var:             # <<<<<<<<<<<<<<
@@ -3801,26 +3796,26 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
     __pyx_t_4 = __pyx_v_var; __Pyx_INCREF(__pyx_t_4); __pyx_t_8 = 0;
     __pyx_t_9 = NULL;
   } else {
-    __pyx_t_8 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_v_var); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_8 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_v_var); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 125, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_9 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_9 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 125, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_9)) {
       if (likely(PyList_CheckExact(__pyx_t_4))) {
         if (__pyx_t_8 >= PyList_GET_SIZE(__pyx_t_4)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_8); __Pyx_INCREF(__pyx_t_1); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
+        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_8); __Pyx_INCREF(__pyx_t_1); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 125, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_4, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 124, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_4, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 125, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       } else {
         if (__pyx_t_8 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_8); __Pyx_INCREF(__pyx_t_1); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
+        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_8); __Pyx_INCREF(__pyx_t_1); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 125, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_4, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 124, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_4, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 125, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       }
@@ -3830,7 +3825,7 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 124, __pyx_L1_error)
+          else __PYX_ERR(0, 125, __pyx_L1_error)
         }
         break;
       }
@@ -3839,32 +3834,32 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
     __Pyx_XDECREF_SET(__pyx_v__c, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "plutus.py":125
+    /* "plutus.py":126
  *     result = chars[value] + result
  *     for _c in var:
  *         if _c == 0:             # <<<<<<<<<<<<<<
  *             pad += 1
  *         else:
  */
-    __pyx_t_1 = __Pyx_PyInt_EqObjC(__pyx_v__c, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 125, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyInt_EqObjC(__pyx_v__c, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 126, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 125, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 126, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_10) {
 
-      /* "plutus.py":126
+      /* "plutus.py":127
  *     for _c in var:
  *         if _c == 0:
  *             pad += 1             # <<<<<<<<<<<<<<
  *         else:
  *             break
  */
-      __pyx_t_1 = __Pyx_PyInt_AddObjC(__pyx_v_pad, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 126, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyInt_AddObjC(__pyx_v_pad, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 127, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF_SET(__pyx_v_pad, __pyx_t_1);
       __pyx_t_1 = 0;
 
-      /* "plutus.py":125
+      /* "plutus.py":126
  *     result = chars[value] + result
  *     for _c in var:
  *         if _c == 0:             # <<<<<<<<<<<<<<
@@ -3874,7 +3869,7 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
       goto __pyx_L11;
     }
 
-    /* "plutus.py":128
+    /* "plutus.py":129
  *             pad += 1
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -3886,7 +3881,7 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
     }
     __pyx_L11:;
 
-    /* "plutus.py":124
+    /* "plutus.py":125
  *         result, value = chars[mod] + result, div
  *     result = chars[value] + result
  *     for _c in var:             # <<<<<<<<<<<<<<
@@ -3897,7 +3892,7 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
   __pyx_L10_break:;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "plutus.py":129
+  /* "plutus.py":130
  *         else:
  *             break
  *     return chars[0] * pad + result             # <<<<<<<<<<<<<<
@@ -3905,20 +3900,20 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_12 = __Pyx_GetItemInt_Unicode(__pyx_v_chars, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(__pyx_t_12 == (Py_UCS4)-1)) __PYX_ERR(0, 129, __pyx_L1_error)
-  __pyx_t_4 = PyUnicode_FromOrdinal(__pyx_t_12); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 129, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_GetItemInt_Unicode(__pyx_v_chars, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(__pyx_t_12 == (Py_UCS4)-1)) __PYX_ERR(0, 130, __pyx_L1_error)
+  __pyx_t_4 = PyUnicode_FromOrdinal(__pyx_t_12); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 130, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = PyNumber_Multiply(__pyx_t_4, __pyx_v_pad); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 129, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_4, __pyx_v_pad); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 130, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_v_result); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 129, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_v_result); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 130, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_4;
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "plutus.py":105
+  /* "plutus.py":106
  * 
  * 
  * def private_key_to_wif(private_key):             # <<<<<<<<<<<<<<
@@ -3945,7 +3940,7 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
   __Pyx_XDECREF(__pyx_v_value);
   __Pyx_XDECREF(__pyx_v_pad);
   __Pyx_XDECREF(__pyx_v_result);
-  __Pyx_XDECREF(__pyx_v_i);
+  __Pyx_XDECREF(__pyx_v__i);
   __Pyx_XDECREF(__pyx_v__c);
   __Pyx_XDECREF(__pyx_v_div);
   __Pyx_XDECREF(__pyx_v_mod);
@@ -3954,7 +3949,7 @@ static PyObject *__pyx_pf_6plutus_8private_key_to_wif(CYTHON_UNUSED PyObject *__
   return __pyx_r;
 }
 
-/* "plutus.py":132
+/* "plutus.py":133
  * 
  * 
  * def main(_database):             # <<<<<<<<<<<<<<
@@ -3990,7 +3985,7 @@ static PyObject *__pyx_pf_6plutus_10main(CYTHON_UNUSED PyObject *__pyx_self, PyO
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("main", 0);
 
-  /* "plutus.py":139
+  /* "plutus.py":140
  *     one process.
  *     """
  *     while True:             # <<<<<<<<<<<<<<
@@ -3999,14 +3994,14 @@ static PyObject *__pyx_pf_6plutus_10main(CYTHON_UNUSED PyObject *__pyx_self, PyO
  */
   while (1) {
 
-    /* "plutus.py":141
+    /* "plutus.py":142
  *     while True:
  *         # 0.0000061659 seconds
  *         private_key = generate_private_key()             # <<<<<<<<<<<<<<
  *         # 0.0016401287 seconds
  *         public_key = private_key_to_public_key(private_key)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_generate_private_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 141, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_generate_private_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 142, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -4020,20 +4015,20 @@ static PyObject *__pyx_pf_6plutus_10main(CYTHON_UNUSED PyObject *__pyx_self, PyO
     }
     __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 141, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 142, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_XDECREF_SET(__pyx_v_private_key, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "plutus.py":143
+    /* "plutus.py":144
  *         private_key = generate_private_key()
  *         # 0.0016401287 seconds
  *         public_key = private_key_to_public_key(private_key)             # <<<<<<<<<<<<<<
  *         # 0.0000801390 seconds
  *         address = public_key_to_address(public_key)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_private_key_to_public_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 143, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_private_key_to_public_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 144, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -4047,20 +4042,20 @@ static PyObject *__pyx_pf_6plutus_10main(CYTHON_UNUSED PyObject *__pyx_self, PyO
     }
     __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_v_private_key) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_private_key);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 143, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 144, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_XDECREF_SET(__pyx_v_public_key, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "plutus.py":145
+    /* "plutus.py":146
  *         public_key = private_key_to_public_key(private_key)
  *         # 0.0000801390 seconds
  *         address = public_key_to_address(public_key)             # <<<<<<<<<<<<<<
  *         if address != -1:
  *             # 0.0000026941 seconds
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_public_key_to_address); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 145, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_public_key_to_address); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 146, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -4074,33 +4069,33 @@ static PyObject *__pyx_pf_6plutus_10main(CYTHON_UNUSED PyObject *__pyx_self, PyO
     }
     __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_v_public_key) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_public_key);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 145, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_XDECREF_SET(__pyx_v_address, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "plutus.py":146
+    /* "plutus.py":147
  *         # 0.0000801390 seconds
  *         address = public_key_to_address(public_key)
  *         if address != -1:             # <<<<<<<<<<<<<<
  *             # 0.0000026941 seconds
  *             process(private_key, public_key, address, _database)
  */
-    __pyx_t_1 = __Pyx_PyInt_NeObjC(__pyx_v_address, __pyx_int_neg_1, -1L, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyInt_NeObjC(__pyx_v_address, __pyx_int_neg_1, -1L, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 147, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 146, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 147, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_4) {
 
-      /* "plutus.py":148
+      /* "plutus.py":149
  *         if address != -1:
  *             # 0.0000026941 seconds
  *             process(private_key, public_key, address, _database)             # <<<<<<<<<<<<<<
  *         # --------------------
  *         # 0.0017291287 seconds
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_process); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 148, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_process); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 149, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_3 = NULL;
       __pyx_t_5 = 0;
@@ -4117,7 +4112,7 @@ static PyObject *__pyx_pf_6plutus_10main(CYTHON_UNUSED PyObject *__pyx_self, PyO
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_2)) {
         PyObject *__pyx_temp[5] = {__pyx_t_3, __pyx_v_private_key, __pyx_v_public_key, __pyx_v_address, __pyx_v__database};
-        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 4+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 148, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 4+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 149, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_GOTREF(__pyx_t_1);
       } else
@@ -4125,13 +4120,13 @@ static PyObject *__pyx_pf_6plutus_10main(CYTHON_UNUSED PyObject *__pyx_self, PyO
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
         PyObject *__pyx_temp[5] = {__pyx_t_3, __pyx_v_private_key, __pyx_v_public_key, __pyx_v_address, __pyx_v__database};
-        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 4+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 148, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 4+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 149, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_GOTREF(__pyx_t_1);
       } else
       #endif
       {
-        __pyx_t_6 = PyTuple_New(4+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 148, __pyx_L1_error)
+        __pyx_t_6 = PyTuple_New(4+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 149, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         if (__pyx_t_3) {
           __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -4148,14 +4143,14 @@ static PyObject *__pyx_pf_6plutus_10main(CYTHON_UNUSED PyObject *__pyx_self, PyO
         __Pyx_INCREF(__pyx_v__database);
         __Pyx_GIVEREF(__pyx_v__database);
         PyTuple_SET_ITEM(__pyx_t_6, 3+__pyx_t_5, __pyx_v__database);
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 148, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 149, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       }
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "plutus.py":146
+      /* "plutus.py":147
  *         # 0.0000801390 seconds
  *         address = public_key_to_address(public_key)
  *         if address != -1:             # <<<<<<<<<<<<<<
@@ -4165,7 +4160,7 @@ static PyObject *__pyx_pf_6plutus_10main(CYTHON_UNUSED PyObject *__pyx_self, PyO
     }
   }
 
-  /* "plutus.py":132
+  /* "plutus.py":133
  * 
  * 
  * def main(_database):             # <<<<<<<<<<<<<<
@@ -4254,7 +4249,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_Process, __pyx_k_Process, sizeof(__pyx_k_Process), 0, 0, 1, 1},
   {&__pyx_kp_u_Public_key, __pyx_k_Public_key, sizeof(__pyx_k_Public_key), 0, 1, 0, 0},
   {&__pyx_n_s_QUARTER, __pyx_k_QUARTER, sizeof(__pyx_k_QUARTER), 0, 0, 1, 1},
-  {&__pyx_n_s_SyntaxError, __pyx_k_SyntaxError, sizeof(__pyx_k_SyntaxError), 0, 0, 1, 1},
   {&__pyx_kp_u_WIF_PrivateKey, __pyx_k_WIF_PrivateKey, sizeof(__pyx_k_WIF_PrivateKey), 0, 1, 0, 0},
   {&__pyx_kp_u__2, __pyx_k__2, sizeof(__pyx_k__2), 0, 1, 0, 0},
   {&__pyx_kp_u__20, __pyx_k__20, sizeof(__pyx_k__20), 0, 1, 0, 0},
@@ -4292,6 +4286,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_fastecdsa, __pyx_k_fastecdsa, sizeof(__pyx_k_fastecdsa), 0, 0, 1, 1},
   {&__pyx_n_s_file, __pyx_k_file, sizeof(__pyx_k_file), 0, 0, 1, 1},
   {&__pyx_n_s_file_2, __pyx_k_file_2, sizeof(__pyx_k_file_2), 0, 0, 1, 1},
+  {&__pyx_n_s_flush, __pyx_k_flush, sizeof(__pyx_k_flush), 0, 0, 1, 1},
   {&__pyx_n_s_format, __pyx_k_format, sizeof(__pyx_k_format), 0, 0, 1, 1},
   {&__pyx_n_s_gen_private_key, __pyx_k_gen_private_key, sizeof(__pyx_k_gen_private_key), 0, 0, 1, 1},
   {&__pyx_n_s_generate_private_key, __pyx_k_generate_private_key, sizeof(__pyx_k_generate_private_key), 0, 0, 1, 1},
@@ -4300,7 +4295,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_hex_PrivateKey, __pyx_k_hex_PrivateKey, sizeof(__pyx_k_hex_PrivateKey), 0, 1, 0, 0},
   {&__pyx_n_s_hexdigest, __pyx_k_hexdigest, sizeof(__pyx_k_hexdigest), 0, 0, 1, 1},
   {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
-  {&__pyx_n_s_i_2, __pyx_k_i_2, sizeof(__pyx_k_i_2), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_index, __pyx_k_index, sizeof(__pyx_k_index), 0, 0, 1, 1},
   {&__pyx_n_s_keys, __pyx_k_keys, sizeof(__pyx_k_keys), 0, 0, 1, 1},
@@ -4355,11 +4349,10 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(0, 16, __pyx_L1_error)
-  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 164, __pyx_L1_error)
-  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 165, __pyx_L1_error)
-  __pyx_builtin_open = __Pyx_GetBuiltinName(__pyx_n_s_open); if (!__pyx_builtin_open) __PYX_ERR(0, 166, __pyx_L1_error)
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 185, __pyx_L1_error)
-  __pyx_builtin_SyntaxError = __Pyx_GetBuiltinName(__pyx_n_s_SyntaxError); if (!__pyx_builtin_SyntaxError) __PYX_ERR(0, 74, __pyx_L1_error)
+  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 165, __pyx_L1_error)
+  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 166, __pyx_L1_error)
+  __pyx_builtin_open = __Pyx_GetBuiltinName(__pyx_n_s_open); if (!__pyx_builtin_open) __PYX_ERR(0, 167, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 186, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -4369,119 +4362,119 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "plutus.py":65
+  /* "plutus.py":66
  *         digest = hashlib.sha256(binascii.unhexlify(var_encoded)).digest()
  *         var_hex = '00' + var.hexdigest() + \
  *             hashlib.sha256(digest).hexdigest()[0:8]             # <<<<<<<<<<<<<<
  *         _count = [char != '0' for char in var_hex].index(True) // 2
  *         _n = int(var_hex, 16)
  */
-  __pyx_slice_ = PySlice_New(__pyx_int_0, __pyx_int_8, Py_None); if (unlikely(!__pyx_slice_)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __pyx_slice_ = PySlice_New(__pyx_int_0, __pyx_int_8, Py_None); if (unlikely(!__pyx_slice_)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_slice_);
   __Pyx_GIVEREF(__pyx_slice_);
 
-  /* "plutus.py":73
+  /* "plutus.py":74
  *         for _i in range(_count):
  *             output.append(alphabet[0])
  *         return ''.join(output[::-1])             # <<<<<<<<<<<<<<
- *     except SyntaxError:
+ *     except:
  *         # Skip if public_key gen caused an error - I think this happens
  */
-  __pyx_slice__3 = PySlice_New(Py_None, Py_None, __pyx_int_neg_1); if (unlikely(!__pyx_slice__3)) __PYX_ERR(0, 73, __pyx_L1_error)
+  __pyx_slice__3 = PySlice_New(Py_None, Py_None, __pyx_int_neg_1); if (unlikely(!__pyx_slice__3)) __PYX_ERR(0, 74, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_slice__3);
   __Pyx_GIVEREF(__pyx_slice__3);
 
-  /* "plutus.py":93
+  /* "plutus.py":94
  *        address in _database[3] or \
  *        address in _database[4]:
  *         with open('plutus.txt', 'a') as _file:             # <<<<<<<<<<<<<<
  *             _file.write('hex PrivateKey: ' + str(private_key) + '\n' +
  *                         'WIF PrivateKey: ' + str(private_key_to_wif(private_key)) + '\n' +
  */
-  __pyx_tuple__4 = PyTuple_Pack(2, __pyx_kp_u_plutus_txt, __pyx_n_u_a); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __pyx_tuple__4 = PyTuple_Pack(2, __pyx_kp_u_plutus_txt, __pyx_n_u_a); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
-  __pyx_tuple__7 = PyTuple_Pack(3, Py_None, Py_None, Py_None); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __pyx_tuple__7 = PyTuple_Pack(3, Py_None, Py_None, Py_None); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
 
-  /* "plutus.py":28
+  /* "plutus.py":29
  * 
  * 
  * def generate_private_key():             # <<<<<<<<<<<<<<
  *     """
  *     Generate a random 32-byte hex integer which serves as a randomly
  */
-  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_plutus_py, __pyx_n_s_generate_private_key, 28, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_plutus_py, __pyx_n_s_generate_private_key, 29, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) __PYX_ERR(0, 29, __pyx_L1_error)
 
-  /* "plutus.py":37
+  /* "plutus.py":38
  * 
  * 
  * def private_key_to_public_key(private_key):             # <<<<<<<<<<<<<<
  *     """
  *     Accept a hex private key and convert it to its respective public key.
  */
-  __pyx_tuple__10 = PyTuple_Pack(3, __pyx_n_s_private_key, __pyx_n_s_c, __pyx_n_s_d); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 37, __pyx_L1_error)
+  __pyx_tuple__10 = PyTuple_Pack(3, __pyx_n_s_private_key, __pyx_n_s_c, __pyx_n_s_d); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__10);
   __Pyx_GIVEREF(__pyx_tuple__10);
-  __pyx_codeobj__11 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__10, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_plutus_py, __pyx_n_s_private_key_to_public_key, 37, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__11)) __PYX_ERR(0, 37, __pyx_L1_error)
+  __pyx_codeobj__11 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__10, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_plutus_py, __pyx_n_s_private_key_to_public_key, 38, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__11)) __PYX_ERR(0, 38, __pyx_L1_error)
 
-  /* "plutus.py":51
+  /* "plutus.py":52
  * 
  * 
  * def public_key_to_address(public_key):             # <<<<<<<<<<<<<<
  *     """
  *     Accept a public key and convert it to its resepective P2PKH wallet address.
  */
-  __pyx_tuple__12 = PyTuple_Pack(13, __pyx_n_s_public_key, __pyx_n_s_output, __pyx_n_s_alphabet, __pyx_n_s_var, __pyx_n_s_encoding, __pyx_n_s_var_encoded, __pyx_n_s_digest, __pyx_n_s_var_hex, __pyx_n_s_count, __pyx_n_s_n, __pyx_n_s_remainder, __pyx_n_s_i, __pyx_n_s_char); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 51, __pyx_L1_error)
+  __pyx_tuple__12 = PyTuple_Pack(13, __pyx_n_s_public_key, __pyx_n_s_output, __pyx_n_s_alphabet, __pyx_n_s_var, __pyx_n_s_encoding, __pyx_n_s_var_encoded, __pyx_n_s_digest, __pyx_n_s_var_hex, __pyx_n_s_count, __pyx_n_s_n, __pyx_n_s_remainder, __pyx_n_s_i, __pyx_n_s_char); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 52, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__12);
   __Pyx_GIVEREF(__pyx_tuple__12);
-  __pyx_codeobj__13 = (PyObject*)__Pyx_PyCode_New(1, 0, 13, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__12, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_plutus_py, __pyx_n_s_public_key_to_address, 51, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__13)) __PYX_ERR(0, 51, __pyx_L1_error)
+  __pyx_codeobj__13 = (PyObject*)__Pyx_PyCode_New(1, 0, 13, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__12, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_plutus_py, __pyx_n_s_public_key_to_address, 52, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__13)) __PYX_ERR(0, 52, __pyx_L1_error)
 
-  /* "plutus.py":80
+  /* "plutus.py":81
  * 
  * 
  * def process(private_key, public_key, address, _database):             # <<<<<<<<<<<<<<
  *     """
  *     Accept an address and query the database. If the address is found in the
  */
-  __pyx_tuple__14 = PyTuple_Pack(5, __pyx_n_s_private_key, __pyx_n_s_public_key, __pyx_n_s_address, __pyx_n_s_database, __pyx_n_s_file); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(0, 80, __pyx_L1_error)
+  __pyx_tuple__14 = PyTuple_Pack(5, __pyx_n_s_private_key, __pyx_n_s_public_key, __pyx_n_s_address, __pyx_n_s_database, __pyx_n_s_file); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(0, 81, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__14);
   __Pyx_GIVEREF(__pyx_tuple__14);
-  __pyx_codeobj__15 = (PyObject*)__Pyx_PyCode_New(4, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__14, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_plutus_py, __pyx_n_s_process, 80, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__15)) __PYX_ERR(0, 80, __pyx_L1_error)
+  __pyx_codeobj__15 = (PyObject*)__Pyx_PyCode_New(4, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__14, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_plutus_py, __pyx_n_s_process, 81, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__15)) __PYX_ERR(0, 81, __pyx_L1_error)
 
-  /* "plutus.py":105
+  /* "plutus.py":106
  * 
  * 
  * def private_key_to_wif(private_key):             # <<<<<<<<<<<<<<
  *     """
  *     Convert the hex private key into Wallet Import Format for easier wallet
  */
-  __pyx_tuple__16 = PyTuple_Pack(12, __pyx_n_s_private_key, __pyx_n_s_digest, __pyx_n_s_var, __pyx_n_s_alphabet, __pyx_n_s_chars, __pyx_n_s_value, __pyx_n_s_pad, __pyx_n_s_result, __pyx_n_s_i_2, __pyx_n_s_c, __pyx_n_s_div, __pyx_n_s_mod); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_tuple__16 = PyTuple_Pack(12, __pyx_n_s_private_key, __pyx_n_s_digest, __pyx_n_s_var, __pyx_n_s_alphabet, __pyx_n_s_chars, __pyx_n_s_value, __pyx_n_s_pad, __pyx_n_s_result, __pyx_n_s_i, __pyx_n_s_c, __pyx_n_s_div, __pyx_n_s_mod); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__16);
   __Pyx_GIVEREF(__pyx_tuple__16);
-  __pyx_codeobj__17 = (PyObject*)__Pyx_PyCode_New(1, 0, 12, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_plutus_py, __pyx_n_s_private_key_to_wif, 105, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__17)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_codeobj__17 = (PyObject*)__Pyx_PyCode_New(1, 0, 12, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_plutus_py, __pyx_n_s_private_key_to_wif, 106, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__17)) __PYX_ERR(0, 106, __pyx_L1_error)
 
-  /* "plutus.py":132
+  /* "plutus.py":133
  * 
  * 
  * def main(_database):             # <<<<<<<<<<<<<<
  *     """
  *     Create the main pipeline by using an infinite loop to repeatedly call the
  */
-  __pyx_tuple__18 = PyTuple_Pack(4, __pyx_n_s_database, __pyx_n_s_private_key, __pyx_n_s_public_key, __pyx_n_s_address); if (unlikely(!__pyx_tuple__18)) __PYX_ERR(0, 132, __pyx_L1_error)
+  __pyx_tuple__18 = PyTuple_Pack(4, __pyx_n_s_database, __pyx_n_s_private_key, __pyx_n_s_public_key, __pyx_n_s_address); if (unlikely(!__pyx_tuple__18)) __PYX_ERR(0, 133, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__18);
   __Pyx_GIVEREF(__pyx_tuple__18);
-  __pyx_codeobj__19 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__18, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_plutus_py, __pyx_n_s_main_2, 132, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__19)) __PYX_ERR(0, 132, __pyx_L1_error)
+  __pyx_codeobj__19 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__18, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_plutus_py, __pyx_n_s_main_2, 133, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__19)) __PYX_ERR(0, 133, __pyx_L1_error)
 
-  /* "plutus.py":180
+  /* "plutus.py":181
  *                 else:
  *                     _DATABASE[3] = _DATABASE[3] | pickle.load(file)
  *     print('DONE')             # <<<<<<<<<<<<<<
  * 
  *     # To verify the database size, remove the # from the line below
  */
-  __pyx_tuple__22 = PyTuple_Pack(1, __pyx_n_u_DONE); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(0, 180, __pyx_L1_error)
+  __pyx_tuple__22 = PyTuple_Pack(1, __pyx_n_u_DONE); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__22);
   __Pyx_GIVEREF(__pyx_tuple__22);
   __Pyx_RefNannyFinishContext();
@@ -4936,7 +4929,7 @@ if (!__Pyx_RefNanny) {
  * # using fastecdsa instead of starkbank
  * from fastecdsa import curve, keys             # <<<<<<<<<<<<<<
  * 
- * DATABASE = r'database/JUL_06_2019/'
+ * 
  */
   __pyx_t_7 = PyList_New(2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 23, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
@@ -4959,101 +4952,101 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "plutus.py":25
- * from fastecdsa import curve, keys
+  /* "plutus.py":26
+ * 
  * 
  * DATABASE = r'database/JUL_06_2019/'             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_DATABASE, __pyx_kp_u_database_JUL_06_2019) < 0) __PYX_ERR(0, 25, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_DATABASE, __pyx_kp_u_database_JUL_06_2019) < 0) __PYX_ERR(0, 26, __pyx_L1_error)
 
-  /* "plutus.py":28
+  /* "plutus.py":29
  * 
  * 
  * def generate_private_key():             # <<<<<<<<<<<<<<
  *     """
  *     Generate a random 32-byte hex integer which serves as a randomly
  */
-  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6plutus_1generate_private_key, 0, __pyx_n_s_generate_private_key, NULL, __pyx_n_s_plutus, __pyx_d, ((PyObject *)__pyx_codeobj__9)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6plutus_1generate_private_key, 0, __pyx_n_s_generate_private_key, NULL, __pyx_n_s_plutus, __pyx_d, ((PyObject *)__pyx_codeobj__9)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_generate_private_key, __pyx_t_6) < 0) __PYX_ERR(0, 28, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_generate_private_key, __pyx_t_6) < 0) __PYX_ERR(0, 29, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "plutus.py":37
+  /* "plutus.py":38
  * 
  * 
  * def private_key_to_public_key(private_key):             # <<<<<<<<<<<<<<
  *     """
  *     Accept a hex private key and convert it to its respective public key.
  */
-  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6plutus_3private_key_to_public_key, 0, __pyx_n_s_private_key_to_public_key, NULL, __pyx_n_s_plutus, __pyx_d, ((PyObject *)__pyx_codeobj__11)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 37, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6plutus_3private_key_to_public_key, 0, __pyx_n_s_private_key_to_public_key, NULL, __pyx_n_s_plutus, __pyx_d, ((PyObject *)__pyx_codeobj__11)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_private_key_to_public_key, __pyx_t_6) < 0) __PYX_ERR(0, 37, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_private_key_to_public_key, __pyx_t_6) < 0) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "plutus.py":51
+  /* "plutus.py":52
  * 
  * 
  * def public_key_to_address(public_key):             # <<<<<<<<<<<<<<
  *     """
  *     Accept a public key and convert it to its resepective P2PKH wallet address.
  */
-  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6plutus_5public_key_to_address, 0, __pyx_n_s_public_key_to_address, NULL, __pyx_n_s_plutus, __pyx_d, ((PyObject *)__pyx_codeobj__13)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 51, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6plutus_5public_key_to_address, 0, __pyx_n_s_public_key_to_address, NULL, __pyx_n_s_plutus, __pyx_d, ((PyObject *)__pyx_codeobj__13)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 52, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_public_key_to_address, __pyx_t_6) < 0) __PYX_ERR(0, 51, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_public_key_to_address, __pyx_t_6) < 0) __PYX_ERR(0, 52, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "plutus.py":80
+  /* "plutus.py":81
  * 
  * 
  * def process(private_key, public_key, address, _database):             # <<<<<<<<<<<<<<
  *     """
  *     Accept an address and query the database. If the address is found in the
  */
-  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6plutus_7process, 0, __pyx_n_s_process, NULL, __pyx_n_s_plutus, __pyx_d, ((PyObject *)__pyx_codeobj__15)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 80, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6plutus_7process, 0, __pyx_n_s_process, NULL, __pyx_n_s_plutus, __pyx_d, ((PyObject *)__pyx_codeobj__15)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 81, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_process, __pyx_t_6) < 0) __PYX_ERR(0, 80, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_process, __pyx_t_6) < 0) __PYX_ERR(0, 81, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "plutus.py":105
+  /* "plutus.py":106
  * 
  * 
  * def private_key_to_wif(private_key):             # <<<<<<<<<<<<<<
  *     """
  *     Convert the hex private key into Wallet Import Format for easier wallet
  */
-  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6plutus_9private_key_to_wif, 0, __pyx_n_s_private_key_to_wif, NULL, __pyx_n_s_plutus, __pyx_d, ((PyObject *)__pyx_codeobj__17)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6plutus_9private_key_to_wif, 0, __pyx_n_s_private_key_to_wif, NULL, __pyx_n_s_plutus, __pyx_d, ((PyObject *)__pyx_codeobj__17)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_private_key_to_wif, __pyx_t_6) < 0) __PYX_ERR(0, 105, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_private_key_to_wif, __pyx_t_6) < 0) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "plutus.py":132
+  /* "plutus.py":133
  * 
  * 
  * def main(_database):             # <<<<<<<<<<<<<<
  *     """
  *     Create the main pipeline by using an infinite loop to repeatedly call the
  */
-  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6plutus_11main, 0, __pyx_n_s_main_2, NULL, __pyx_n_s_plutus, __pyx_d, ((PyObject *)__pyx_codeobj__19)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 132, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_6plutus_11main, 0, __pyx_n_s_main_2, NULL, __pyx_n_s_plutus, __pyx_d, ((PyObject *)__pyx_codeobj__19)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 133, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_main_2, __pyx_t_6) < 0) __PYX_ERR(0, 132, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_main_2, __pyx_t_6) < 0) __PYX_ERR(0, 133, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "plutus.py":153
+  /* "plutus.py":154
  * 
  * 
  * if __name__ == '__main__':             # <<<<<<<<<<<<<<
  *     """
  *     Deserialize the database and read into a list of sets for easier selection
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_name); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_name); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_t_6, __pyx_n_u_main, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_t_6, __pyx_n_u_main, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   if (__pyx_t_9) {
 
-    /* "plutus.py":160
+    /* "plutus.py":161
  *     """
  * 
  *     _DATABASE = [set() for _ in range(5)]             # <<<<<<<<<<<<<<
@@ -5061,18 +5054,18 @@ if (!__Pyx_RefNanny) {
  *     _HALF = _COUNT // 2
  */
     { /* enter inner scope */
-      __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 160, __pyx_L13_error)
+      __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 161, __pyx_L13_error)
       __Pyx_GOTREF(__pyx_t_6);
       for (__pyx_t_10 = 0; __pyx_t_10 < 5; __pyx_t_10+=1) {
-        __pyx_t_7 = __Pyx_PyInt_From_long(__pyx_t_10); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 160, __pyx_L13_error)
+        __pyx_t_7 = __Pyx_PyInt_From_long(__pyx_t_10); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 161, __pyx_L13_error)
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_XGOTREF(__pyx_8genexpr1__pyx_v_6plutus__);
         __Pyx_DECREF_SET(__pyx_8genexpr1__pyx_v_6plutus__, __pyx_t_7);
         __Pyx_GIVEREF(__pyx_t_7);
         __pyx_t_7 = 0;
-        __pyx_t_7 = PySet_New(0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 160, __pyx_L13_error)
+        __pyx_t_7 = PySet_New(0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 161, __pyx_L13_error)
         __Pyx_GOTREF(__pyx_t_7);
-        if (unlikely(__Pyx_ListComp_Append(__pyx_t_6, (PyObject*)__pyx_t_7))) __PYX_ERR(0, 160, __pyx_L13_error)
+        if (unlikely(__Pyx_ListComp_Append(__pyx_t_6, (PyObject*)__pyx_t_7))) __PYX_ERR(0, 161, __pyx_L13_error)
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       }
       __Pyx_GOTREF(__pyx_8genexpr1__pyx_v_6plutus__);
@@ -5084,65 +5077,65 @@ if (!__Pyx_RefNanny) {
       goto __pyx_L1_error;
       __pyx_L16_exit_scope:;
     } /* exit inner scope */
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_DATABASE_2, __pyx_t_6) < 0) __PYX_ERR(0, 160, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_DATABASE_2, __pyx_t_6) < 0) __PYX_ERR(0, 161, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "plutus.py":161
+    /* "plutus.py":162
  * 
  *     _DATABASE = [set() for _ in range(5)]
  *     _COUNT = len(os.listdir(DATABASE))             # <<<<<<<<<<<<<<
  *     _HALF = _COUNT // 2
  *     _QUARTER = _HALF // 2
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_os); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 161, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_os); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 162, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_listdir); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 161, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_listdir); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 162, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_DATABASE); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 161, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_DATABASE); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 162, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 161, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 162, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_11 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_11 == ((Py_ssize_t)-1))) __PYX_ERR(0, 161, __pyx_L1_error)
+    __pyx_t_11 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_11 == ((Py_ssize_t)-1))) __PYX_ERR(0, 162, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_11); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 161, __pyx_L1_error)
+    __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_11); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 162, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_COUNT, __pyx_t_1) < 0) __PYX_ERR(0, 161, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_COUNT, __pyx_t_1) < 0) __PYX_ERR(0, 162, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "plutus.py":162
+    /* "plutus.py":163
  *     _DATABASE = [set() for _ in range(5)]
  *     _COUNT = len(os.listdir(DATABASE))
  *     _HALF = _COUNT // 2             # <<<<<<<<<<<<<<
  *     _QUARTER = _HALF // 2
  *     for c, p in enumerate(os.listdir(DATABASE)):
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_COUNT); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 162, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_COUNT); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 163, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = __Pyx_PyInt_FloorDivideObjC(__pyx_t_1, __pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 162, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_FloorDivideObjC(__pyx_t_1, __pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 163, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_HALF, __pyx_t_6) < 0) __PYX_ERR(0, 162, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_HALF, __pyx_t_6) < 0) __PYX_ERR(0, 163, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "plutus.py":163
+    /* "plutus.py":164
  *     _COUNT = len(os.listdir(DATABASE))
  *     _HALF = _COUNT // 2
  *     _QUARTER = _HALF // 2             # <<<<<<<<<<<<<<
  *     for c, p in enumerate(os.listdir(DATABASE)):
  *         print('\rreading database: ' + str(c + 1) + '/' + str(_COUNT), end=' ')
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_HALF); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 163, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_HALF); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 164, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_1 = __Pyx_PyInt_FloorDivideObjC(__pyx_t_6, __pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 163, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyInt_FloorDivideObjC(__pyx_t_6, __pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 164, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_QUARTER, __pyx_t_1) < 0) __PYX_ERR(0, 163, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_QUARTER, __pyx_t_1) < 0) __PYX_ERR(0, 164, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "plutus.py":164
+    /* "plutus.py":165
  *     _HALF = _COUNT // 2
  *     _QUARTER = _HALF // 2
  *     for c, p in enumerate(os.listdir(DATABASE)):             # <<<<<<<<<<<<<<
@@ -5151,12 +5144,12 @@ if (!__Pyx_RefNanny) {
  */
     __Pyx_INCREF(__pyx_int_0);
     __pyx_t_1 = __pyx_int_0;
-    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_os); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 164, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_os); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 165, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_listdir); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 164, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_listdir); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 165, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_DATABASE); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 164, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_DATABASE); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 165, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __pyx_t_12 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_8))) {
@@ -5171,16 +5164,16 @@ if (!__Pyx_RefNanny) {
     __pyx_t_6 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_8, __pyx_t_12, __pyx_t_7) : __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_7);
     __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 164, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 165, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     if (likely(PyList_CheckExact(__pyx_t_6)) || PyTuple_CheckExact(__pyx_t_6)) {
       __pyx_t_8 = __pyx_t_6; __Pyx_INCREF(__pyx_t_8); __pyx_t_11 = 0;
       __pyx_t_13 = NULL;
     } else {
-      __pyx_t_11 = -1; __pyx_t_8 = PyObject_GetIter(__pyx_t_6); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 164, __pyx_L1_error)
+      __pyx_t_11 = -1; __pyx_t_8 = PyObject_GetIter(__pyx_t_6); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 165, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_13 = Py_TYPE(__pyx_t_8)->tp_iternext; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 164, __pyx_L1_error)
+      __pyx_t_13 = Py_TYPE(__pyx_t_8)->tp_iternext; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 165, __pyx_L1_error)
     }
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     for (;;) {
@@ -5188,17 +5181,17 @@ if (!__Pyx_RefNanny) {
         if (likely(PyList_CheckExact(__pyx_t_8))) {
           if (__pyx_t_11 >= PyList_GET_SIZE(__pyx_t_8)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_6 = PyList_GET_ITEM(__pyx_t_8, __pyx_t_11); __Pyx_INCREF(__pyx_t_6); __pyx_t_11++; if (unlikely(0 < 0)) __PYX_ERR(0, 164, __pyx_L1_error)
+          __pyx_t_6 = PyList_GET_ITEM(__pyx_t_8, __pyx_t_11); __Pyx_INCREF(__pyx_t_6); __pyx_t_11++; if (unlikely(0 < 0)) __PYX_ERR(0, 165, __pyx_L1_error)
           #else
-          __pyx_t_6 = PySequence_ITEM(__pyx_t_8, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 164, __pyx_L1_error)
+          __pyx_t_6 = PySequence_ITEM(__pyx_t_8, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 165, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           #endif
         } else {
           if (__pyx_t_11 >= PyTuple_GET_SIZE(__pyx_t_8)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_8, __pyx_t_11); __Pyx_INCREF(__pyx_t_6); __pyx_t_11++; if (unlikely(0 < 0)) __PYX_ERR(0, 164, __pyx_L1_error)
+          __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_8, __pyx_t_11); __Pyx_INCREF(__pyx_t_6); __pyx_t_11++; if (unlikely(0 < 0)) __PYX_ERR(0, 165, __pyx_L1_error)
           #else
-          __pyx_t_6 = PySequence_ITEM(__pyx_t_8, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 164, __pyx_L1_error)
+          __pyx_t_6 = PySequence_ITEM(__pyx_t_8, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 165, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           #endif
         }
@@ -5208,66 +5201,66 @@ if (!__Pyx_RefNanny) {
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(0, 164, __pyx_L1_error)
+            else __PYX_ERR(0, 165, __pyx_L1_error)
           }
           break;
         }
         __Pyx_GOTREF(__pyx_t_6);
       }
-      if (PyDict_SetItem(__pyx_d, __pyx_n_s_p, __pyx_t_6) < 0) __PYX_ERR(0, 164, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_d, __pyx_n_s_p, __pyx_t_6) < 0) __PYX_ERR(0, 165, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (PyDict_SetItem(__pyx_d, __pyx_n_s_c_2, __pyx_t_1) < 0) __PYX_ERR(0, 164, __pyx_L1_error)
-      __pyx_t_6 = __Pyx_PyInt_AddObjC(__pyx_t_1, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 164, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_d, __pyx_n_s_c_2, __pyx_t_1) < 0) __PYX_ERR(0, 165, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyInt_AddObjC(__pyx_t_1, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 165, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_1);
       __pyx_t_1 = __pyx_t_6;
       __pyx_t_6 = 0;
 
-      /* "plutus.py":165
+      /* "plutus.py":166
  *     _QUARTER = _HALF // 2
  *     for c, p in enumerate(os.listdir(DATABASE)):
  *         print('\rreading database: ' + str(c + 1) + '/' + str(_COUNT), end=' ')             # <<<<<<<<<<<<<<
  *         with open(DATABASE + p, 'rb') as file:
  *             if c + 1 == 21:  # HOOK
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_c_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 165, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_c_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 166, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_7 = __Pyx_PyInt_AddObjC(__pyx_t_6, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 165, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_AddObjC(__pyx_t_6, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 166, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 165, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 166, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __pyx_t_7 = __Pyx_PyUnicode_Concat(__pyx_kp_u_reading_database, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 165, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyUnicode_Concat(__pyx_kp_u_reading_database, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 166, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_t_7, __pyx_kp_u__20); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 165, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_t_7, __pyx_kp_u__20); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 166, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_COUNT); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 165, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_COUNT); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 166, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_12 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_7); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 165, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_7); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 166, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __pyx_t_7 = __Pyx_PyUnicode_Concat(__pyx_t_6, __pyx_t_12); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 165, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyUnicode_Concat(__pyx_t_6, __pyx_t_12); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 166, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __pyx_t_12 = PyTuple_New(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 165, __pyx_L1_error)
+      __pyx_t_12 = PyTuple_New(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 166, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_GIVEREF(__pyx_t_7);
       PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_t_7);
       __pyx_t_7 = 0;
-      __pyx_t_7 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 165, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 166, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      if (PyDict_SetItem(__pyx_t_7, __pyx_n_s_end, __pyx_kp_u__21) < 0) __PYX_ERR(0, 165, __pyx_L1_error)
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_t_12, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 165, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_7, __pyx_n_s_end, __pyx_kp_u__21) < 0) __PYX_ERR(0, 166, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_t_12, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 166, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "plutus.py":166
+      /* "plutus.py":167
  *     for c, p in enumerate(os.listdir(DATABASE)):
  *         print('\rreading database: ' + str(c + 1) + '/' + str(_COUNT), end=' ')
  *         with open(DATABASE + p, 'rb') as file:             # <<<<<<<<<<<<<<
@@ -5275,15 +5268,15 @@ if (!__Pyx_RefNanny) {
  *                 _DATABASE[4] = _DATABASE[4] | pickle.load(file)  # HOOK
  */
       /*with:*/ {
-        __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_DATABASE); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 166, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_DATABASE); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 167, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
-        __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_p); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 166, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_p); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 167, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
-        __pyx_t_12 = PyNumber_Add(__pyx_t_6, __pyx_t_7); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 166, __pyx_L1_error)
+        __pyx_t_12 = PyNumber_Add(__pyx_t_6, __pyx_t_7); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 167, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-        __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 166, __pyx_L1_error)
+        __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 167, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_GIVEREF(__pyx_t_12);
         PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_12);
@@ -5291,12 +5284,12 @@ if (!__Pyx_RefNanny) {
         __Pyx_GIVEREF(__pyx_n_u_rb);
         PyTuple_SET_ITEM(__pyx_t_7, 1, __pyx_n_u_rb);
         __pyx_t_12 = 0;
-        __pyx_t_12 = __Pyx_PyObject_Call(__pyx_builtin_open, __pyx_t_7, NULL); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 166, __pyx_L1_error)
+        __pyx_t_12 = __Pyx_PyObject_Call(__pyx_builtin_open, __pyx_t_7, NULL); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 167, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-        __pyx_t_4 = __Pyx_PyObject_LookupSpecial(__pyx_t_12, __pyx_n_s_exit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 166, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyObject_LookupSpecial(__pyx_t_12, __pyx_n_s_exit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 167, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_6 = __Pyx_PyObject_LookupSpecial(__pyx_t_12, __pyx_n_s_enter); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 166, __pyx_L19_error)
+        __pyx_t_6 = __Pyx_PyObject_LookupSpecial(__pyx_t_12, __pyx_n_s_enter); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 167, __pyx_L19_error)
         __Pyx_GOTREF(__pyx_t_6);
         __pyx_t_14 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_6))) {
@@ -5310,7 +5303,7 @@ if (!__Pyx_RefNanny) {
         }
         __pyx_t_7 = (__pyx_t_14) ? __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_14) : __Pyx_PyObject_CallNoArg(__pyx_t_6);
         __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
-        if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 166, __pyx_L19_error)
+        if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 167, __pyx_L19_error)
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __pyx_t_6 = __pyx_t_7;
@@ -5325,46 +5318,46 @@ if (!__Pyx_RefNanny) {
             __Pyx_XGOTREF(__pyx_t_2);
             __Pyx_XGOTREF(__pyx_t_15);
             /*try:*/ {
-              if (PyDict_SetItem(__pyx_d, __pyx_n_s_file_2, __pyx_t_6) < 0) __PYX_ERR(0, 166, __pyx_L25_error)
+              if (PyDict_SetItem(__pyx_d, __pyx_n_s_file_2, __pyx_t_6) < 0) __PYX_ERR(0, 167, __pyx_L25_error)
               __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-              /* "plutus.py":167
+              /* "plutus.py":168
  *         print('\rreading database: ' + str(c + 1) + '/' + str(_COUNT), end=' ')
  *         with open(DATABASE + p, 'rb') as file:
  *             if c + 1 == 21:  # HOOK             # <<<<<<<<<<<<<<
  *                 _DATABASE[4] = _DATABASE[4] | pickle.load(file)  # HOOK
  *                 continue  # HOOK
  */
-              __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_c_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 167, __pyx_L25_error)
+              __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_c_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 168, __pyx_L25_error)
               __Pyx_GOTREF(__pyx_t_6);
-              __pyx_t_12 = __Pyx_PyInt_AddObjC(__pyx_t_6, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 167, __pyx_L25_error)
+              __pyx_t_12 = __Pyx_PyInt_AddObjC(__pyx_t_6, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 168, __pyx_L25_error)
               __Pyx_GOTREF(__pyx_t_12);
               __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-              __pyx_t_6 = __Pyx_PyInt_EqObjC(__pyx_t_12, __pyx_int_21, 21, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 167, __pyx_L25_error)
+              __pyx_t_6 = __Pyx_PyInt_EqObjC(__pyx_t_12, __pyx_int_21, 21, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 168, __pyx_L25_error)
               __Pyx_GOTREF(__pyx_t_6);
               __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-              __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 167, __pyx_L25_error)
+              __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 168, __pyx_L25_error)
               __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
               if (__pyx_t_9) {
 
-                /* "plutus.py":168
+                /* "plutus.py":169
  *         with open(DATABASE + p, 'rb') as file:
  *             if c + 1 == 21:  # HOOK
  *                 _DATABASE[4] = _DATABASE[4] | pickle.load(file)  # HOOK             # <<<<<<<<<<<<<<
  *                 continue  # HOOK
  *             if c < _HALF:
  */
-                __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 168, __pyx_L25_error)
+                __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 169, __pyx_L25_error)
                 __Pyx_GOTREF(__pyx_t_6);
-                __pyx_t_12 = __Pyx_GetItemInt(__pyx_t_6, 4, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 168, __pyx_L25_error)
+                __pyx_t_12 = __Pyx_GetItemInt(__pyx_t_6, 4, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 169, __pyx_L25_error)
                 __Pyx_GOTREF(__pyx_t_12);
                 __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-                __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_pickle); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 168, __pyx_L25_error)
+                __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_pickle); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 169, __pyx_L25_error)
                 __Pyx_GOTREF(__pyx_t_7);
-                __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_load); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 168, __pyx_L25_error)
+                __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_load); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 169, __pyx_L25_error)
                 __Pyx_GOTREF(__pyx_t_14);
                 __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-                __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_file_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 168, __pyx_L25_error)
+                __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_file_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 169, __pyx_L25_error)
                 __Pyx_GOTREF(__pyx_t_7);
                 __pyx_t_16 = NULL;
                 if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_14))) {
@@ -5379,20 +5372,20 @@ if (!__Pyx_RefNanny) {
                 __pyx_t_6 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_16, __pyx_t_7) : __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_t_7);
                 __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
                 __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-                if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 168, __pyx_L25_error)
+                if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 169, __pyx_L25_error)
                 __Pyx_GOTREF(__pyx_t_6);
                 __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-                __pyx_t_14 = PyNumber_Or(__pyx_t_12, __pyx_t_6); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 168, __pyx_L25_error)
+                __pyx_t_14 = PyNumber_Or(__pyx_t_12, __pyx_t_6); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 169, __pyx_L25_error)
                 __Pyx_GOTREF(__pyx_t_14);
                 __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
                 __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-                __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 168, __pyx_L25_error)
+                __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 169, __pyx_L25_error)
                 __Pyx_GOTREF(__pyx_t_6);
-                if (unlikely(__Pyx_SetItemInt(__pyx_t_6, 4, __pyx_t_14, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 168, __pyx_L25_error)
+                if (unlikely(__Pyx_SetItemInt(__pyx_t_6, 4, __pyx_t_14, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 169, __pyx_L25_error)
                 __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
                 __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
 
-                /* "plutus.py":169
+                /* "plutus.py":170
  *             if c + 1 == 21:  # HOOK
  *                 _DATABASE[4] = _DATABASE[4] | pickle.load(file)  # HOOK
  *                 continue  # HOOK             # <<<<<<<<<<<<<<
@@ -5401,7 +5394,7 @@ if (!__Pyx_RefNanny) {
  */
                 goto __pyx_L31_try_continue;
 
-                /* "plutus.py":167
+                /* "plutus.py":168
  *         print('\rreading database: ' + str(c + 1) + '/' + str(_COUNT), end=' ')
  *         with open(DATABASE + p, 'rb') as file:
  *             if c + 1 == 21:  # HOOK             # <<<<<<<<<<<<<<
@@ -5410,60 +5403,60 @@ if (!__Pyx_RefNanny) {
  */
               }
 
-              /* "plutus.py":170
+              /* "plutus.py":171
  *                 _DATABASE[4] = _DATABASE[4] | pickle.load(file)  # HOOK
  *                 continue  # HOOK
  *             if c < _HALF:             # <<<<<<<<<<<<<<
  *                 if c < _QUARTER:
  *                     _DATABASE[0] = _DATABASE[0] | pickle.load(file)
  */
-              __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_c_2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 170, __pyx_L25_error)
+              __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_c_2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 171, __pyx_L25_error)
               __Pyx_GOTREF(__pyx_t_14);
-              __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_HALF); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 170, __pyx_L25_error)
+              __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_HALF); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 171, __pyx_L25_error)
               __Pyx_GOTREF(__pyx_t_6);
-              __pyx_t_12 = PyObject_RichCompare(__pyx_t_14, __pyx_t_6, Py_LT); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 170, __pyx_L25_error)
+              __pyx_t_12 = PyObject_RichCompare(__pyx_t_14, __pyx_t_6, Py_LT); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 171, __pyx_L25_error)
               __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
               __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-              __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 170, __pyx_L25_error)
+              __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 171, __pyx_L25_error)
               __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
               if (__pyx_t_9) {
 
-                /* "plutus.py":171
+                /* "plutus.py":172
  *                 continue  # HOOK
  *             if c < _HALF:
  *                 if c < _QUARTER:             # <<<<<<<<<<<<<<
  *                     _DATABASE[0] = _DATABASE[0] | pickle.load(file)
  *                 else:
  */
-                __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_c_2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 171, __pyx_L25_error)
+                __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_c_2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 172, __pyx_L25_error)
                 __Pyx_GOTREF(__pyx_t_12);
-                __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_QUARTER); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 171, __pyx_L25_error)
+                __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_QUARTER); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 172, __pyx_L25_error)
                 __Pyx_GOTREF(__pyx_t_6);
-                __pyx_t_14 = PyObject_RichCompare(__pyx_t_12, __pyx_t_6, Py_LT); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 171, __pyx_L25_error)
+                __pyx_t_14 = PyObject_RichCompare(__pyx_t_12, __pyx_t_6, Py_LT); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 172, __pyx_L25_error)
                 __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
                 __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-                __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 171, __pyx_L25_error)
+                __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 172, __pyx_L25_error)
                 __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
                 if (__pyx_t_9) {
 
-                  /* "plutus.py":172
+                  /* "plutus.py":173
  *             if c < _HALF:
  *                 if c < _QUARTER:
  *                     _DATABASE[0] = _DATABASE[0] | pickle.load(file)             # <<<<<<<<<<<<<<
  *                 else:
  *                     _DATABASE[1] = _DATABASE[1] | pickle.load(file)
  */
-                  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 172, __pyx_L25_error)
+                  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 173, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_14);
-                  __pyx_t_6 = __Pyx_GetItemInt(__pyx_t_14, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 172, __pyx_L25_error)
+                  __pyx_t_6 = __Pyx_GetItemInt(__pyx_t_14, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 173, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_6);
                   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-                  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_pickle); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 172, __pyx_L25_error)
+                  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_pickle); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 173, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_12);
-                  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_load); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 172, __pyx_L25_error)
+                  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_load); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 173, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_7);
                   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-                  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_file_2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 172, __pyx_L25_error)
+                  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_file_2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 173, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_12);
                   __pyx_t_16 = NULL;
                   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_7))) {
@@ -5478,20 +5471,20 @@ if (!__Pyx_RefNanny) {
                   __pyx_t_14 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_16, __pyx_t_12) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_12);
                   __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
                   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-                  if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 172, __pyx_L25_error)
+                  if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 173, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_14);
                   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-                  __pyx_t_7 = PyNumber_Or(__pyx_t_6, __pyx_t_14); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 172, __pyx_L25_error)
+                  __pyx_t_7 = PyNumber_Or(__pyx_t_6, __pyx_t_14); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 173, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_7);
                   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
                   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-                  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 172, __pyx_L25_error)
+                  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 173, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_14);
-                  if (unlikely(__Pyx_SetItemInt(__pyx_t_14, 0, __pyx_t_7, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 172, __pyx_L25_error)
+                  if (unlikely(__Pyx_SetItemInt(__pyx_t_14, 0, __pyx_t_7, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 173, __pyx_L25_error)
                   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
                   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-                  /* "plutus.py":171
+                  /* "plutus.py":172
  *                 continue  # HOOK
  *             if c < _HALF:
  *                 if c < _QUARTER:             # <<<<<<<<<<<<<<
@@ -5501,7 +5494,7 @@ if (!__Pyx_RefNanny) {
                   goto __pyx_L35;
                 }
 
-                /* "plutus.py":174
+                /* "plutus.py":175
  *                     _DATABASE[0] = _DATABASE[0] | pickle.load(file)
  *                 else:
  *                     _DATABASE[1] = _DATABASE[1] | pickle.load(file)             # <<<<<<<<<<<<<<
@@ -5509,17 +5502,17 @@ if (!__Pyx_RefNanny) {
  *                 if c < _HALF + _QUARTER:
  */
                 /*else*/ {
-                  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 174, __pyx_L25_error)
+                  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 175, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_7);
-                  __pyx_t_14 = __Pyx_GetItemInt(__pyx_t_7, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 174, __pyx_L25_error)
+                  __pyx_t_14 = __Pyx_GetItemInt(__pyx_t_7, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 175, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_14);
                   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-                  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_pickle); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 174, __pyx_L25_error)
+                  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_pickle); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 175, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_6);
-                  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_load); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 174, __pyx_L25_error)
+                  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_load); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 175, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_12);
                   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-                  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_file_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 174, __pyx_L25_error)
+                  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_file_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 175, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_6);
                   __pyx_t_16 = NULL;
                   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -5534,22 +5527,22 @@ if (!__Pyx_RefNanny) {
                   __pyx_t_7 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_16, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_6);
                   __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
                   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-                  if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 174, __pyx_L25_error)
+                  if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 175, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_7);
                   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-                  __pyx_t_12 = PyNumber_Or(__pyx_t_14, __pyx_t_7); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 174, __pyx_L25_error)
+                  __pyx_t_12 = PyNumber_Or(__pyx_t_14, __pyx_t_7); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 175, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_12);
                   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
                   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-                  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 174, __pyx_L25_error)
+                  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 175, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_7);
-                  if (unlikely(__Pyx_SetItemInt(__pyx_t_7, 1, __pyx_t_12, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 174, __pyx_L25_error)
+                  if (unlikely(__Pyx_SetItemInt(__pyx_t_7, 1, __pyx_t_12, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 175, __pyx_L25_error)
                   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
                   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
                 }
                 __pyx_L35:;
 
-                /* "plutus.py":170
+                /* "plutus.py":171
  *                 _DATABASE[4] = _DATABASE[4] | pickle.load(file)  # HOOK
  *                 continue  # HOOK
  *             if c < _HALF:             # <<<<<<<<<<<<<<
@@ -5559,7 +5552,7 @@ if (!__Pyx_RefNanny) {
                 goto __pyx_L34;
               }
 
-              /* "plutus.py":176
+              /* "plutus.py":177
  *                     _DATABASE[1] = _DATABASE[1] | pickle.load(file)
  *             else:
  *                 if c < _HALF + _QUARTER:             # <<<<<<<<<<<<<<
@@ -5567,41 +5560,41 @@ if (!__Pyx_RefNanny) {
  *                 else:
  */
               /*else*/ {
-                __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_c_2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 176, __pyx_L25_error)
+                __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_c_2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 177, __pyx_L25_error)
                 __Pyx_GOTREF(__pyx_t_12);
-                __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_HALF); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 176, __pyx_L25_error)
+                __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_HALF); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 177, __pyx_L25_error)
                 __Pyx_GOTREF(__pyx_t_7);
-                __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_QUARTER); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 176, __pyx_L25_error)
+                __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_QUARTER); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 177, __pyx_L25_error)
                 __Pyx_GOTREF(__pyx_t_14);
-                __pyx_t_6 = PyNumber_Add(__pyx_t_7, __pyx_t_14); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 176, __pyx_L25_error)
+                __pyx_t_6 = PyNumber_Add(__pyx_t_7, __pyx_t_14); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 177, __pyx_L25_error)
                 __Pyx_GOTREF(__pyx_t_6);
                 __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
                 __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-                __pyx_t_14 = PyObject_RichCompare(__pyx_t_12, __pyx_t_6, Py_LT); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 176, __pyx_L25_error)
+                __pyx_t_14 = PyObject_RichCompare(__pyx_t_12, __pyx_t_6, Py_LT); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 177, __pyx_L25_error)
                 __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
                 __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-                __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 176, __pyx_L25_error)
+                __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 177, __pyx_L25_error)
                 __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
                 if (__pyx_t_9) {
 
-                  /* "plutus.py":177
+                  /* "plutus.py":178
  *             else:
  *                 if c < _HALF + _QUARTER:
  *                     _DATABASE[2] = _DATABASE[2] | pickle.load(file)             # <<<<<<<<<<<<<<
  *                 else:
  *                     _DATABASE[3] = _DATABASE[3] | pickle.load(file)
  */
-                  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 177, __pyx_L25_error)
+                  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 178, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_14);
-                  __pyx_t_6 = __Pyx_GetItemInt(__pyx_t_14, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 177, __pyx_L25_error)
+                  __pyx_t_6 = __Pyx_GetItemInt(__pyx_t_14, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 178, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_6);
                   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-                  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_pickle); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 177, __pyx_L25_error)
+                  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_pickle); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 178, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_12);
-                  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_load); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 177, __pyx_L25_error)
+                  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_load); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 178, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_7);
                   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-                  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_file_2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 177, __pyx_L25_error)
+                  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_file_2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 178, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_12);
                   __pyx_t_16 = NULL;
                   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_7))) {
@@ -5616,20 +5609,20 @@ if (!__Pyx_RefNanny) {
                   __pyx_t_14 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_16, __pyx_t_12) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_12);
                   __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
                   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-                  if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 177, __pyx_L25_error)
+                  if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 178, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_14);
                   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-                  __pyx_t_7 = PyNumber_Or(__pyx_t_6, __pyx_t_14); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 177, __pyx_L25_error)
+                  __pyx_t_7 = PyNumber_Or(__pyx_t_6, __pyx_t_14); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 178, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_7);
                   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
                   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-                  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 177, __pyx_L25_error)
+                  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 178, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_14);
-                  if (unlikely(__Pyx_SetItemInt(__pyx_t_14, 2, __pyx_t_7, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 177, __pyx_L25_error)
+                  if (unlikely(__Pyx_SetItemInt(__pyx_t_14, 2, __pyx_t_7, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 178, __pyx_L25_error)
                   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
                   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-                  /* "plutus.py":176
+                  /* "plutus.py":177
  *                     _DATABASE[1] = _DATABASE[1] | pickle.load(file)
  *             else:
  *                 if c < _HALF + _QUARTER:             # <<<<<<<<<<<<<<
@@ -5639,7 +5632,7 @@ if (!__Pyx_RefNanny) {
                   goto __pyx_L36;
                 }
 
-                /* "plutus.py":179
+                /* "plutus.py":180
  *                     _DATABASE[2] = _DATABASE[2] | pickle.load(file)
  *                 else:
  *                     _DATABASE[3] = _DATABASE[3] | pickle.load(file)             # <<<<<<<<<<<<<<
@@ -5647,17 +5640,17 @@ if (!__Pyx_RefNanny) {
  * 
  */
                 /*else*/ {
-                  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 179, __pyx_L25_error)
+                  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 180, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_7);
-                  __pyx_t_14 = __Pyx_GetItemInt(__pyx_t_7, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 179, __pyx_L25_error)
+                  __pyx_t_14 = __Pyx_GetItemInt(__pyx_t_7, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 180, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_14);
                   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-                  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_pickle); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 179, __pyx_L25_error)
+                  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_pickle); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 180, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_6);
-                  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_load); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 179, __pyx_L25_error)
+                  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_load); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 180, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_12);
                   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-                  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_file_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 179, __pyx_L25_error)
+                  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_file_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 180, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_6);
                   __pyx_t_16 = NULL;
                   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -5672,16 +5665,16 @@ if (!__Pyx_RefNanny) {
                   __pyx_t_7 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_16, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_6);
                   __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
                   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-                  if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 179, __pyx_L25_error)
+                  if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 180, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_7);
                   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-                  __pyx_t_12 = PyNumber_Or(__pyx_t_14, __pyx_t_7); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 179, __pyx_L25_error)
+                  __pyx_t_12 = PyNumber_Or(__pyx_t_14, __pyx_t_7); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 180, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_12);
                   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
                   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-                  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 179, __pyx_L25_error)
+                  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 180, __pyx_L25_error)
                   __Pyx_GOTREF(__pyx_t_7);
-                  if (unlikely(__Pyx_SetItemInt(__pyx_t_7, 3, __pyx_t_12, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 179, __pyx_L25_error)
+                  if (unlikely(__Pyx_SetItemInt(__pyx_t_7, 3, __pyx_t_12, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 180, __pyx_L25_error)
                   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
                   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
                 }
@@ -5689,7 +5682,7 @@ if (!__Pyx_RefNanny) {
               }
               __pyx_L34:;
 
-              /* "plutus.py":166
+              /* "plutus.py":167
  *     for c, p in enumerate(os.listdir(DATABASE)):
  *         print('\rreading database: ' + str(c + 1) + '/' + str(_COUNT), end=' ')
  *         with open(DATABASE + p, 'rb') as file:             # <<<<<<<<<<<<<<
@@ -5709,20 +5702,20 @@ if (!__Pyx_RefNanny) {
             __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
             /*except:*/ {
               __Pyx_AddTraceback("plutus", __pyx_clineno, __pyx_lineno, __pyx_filename);
-              if (__Pyx_GetException(&__pyx_t_12, &__pyx_t_7, &__pyx_t_14) < 0) __PYX_ERR(0, 166, __pyx_L27_except_error)
+              if (__Pyx_GetException(&__pyx_t_12, &__pyx_t_7, &__pyx_t_14) < 0) __PYX_ERR(0, 167, __pyx_L27_except_error)
               __Pyx_GOTREF(__pyx_t_12);
               __Pyx_GOTREF(__pyx_t_7);
               __Pyx_GOTREF(__pyx_t_14);
-              __pyx_t_6 = PyTuple_Pack(3, __pyx_t_12, __pyx_t_7, __pyx_t_14); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 166, __pyx_L27_except_error)
+              __pyx_t_6 = PyTuple_Pack(3, __pyx_t_12, __pyx_t_7, __pyx_t_14); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 167, __pyx_L27_except_error)
               __Pyx_GOTREF(__pyx_t_6);
               __pyx_t_17 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_6, NULL);
               __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
               __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-              if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 166, __pyx_L27_except_error)
+              if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 167, __pyx_L27_except_error)
               __Pyx_GOTREF(__pyx_t_17);
               __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_17);
               __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
-              if (__pyx_t_9 < 0) __PYX_ERR(0, 166, __pyx_L27_except_error)
+              if (__pyx_t_9 < 0) __PYX_ERR(0, 167, __pyx_L27_except_error)
               __pyx_t_18 = ((!(__pyx_t_9 != 0)) != 0);
               if (__pyx_t_18) {
                 __Pyx_GIVEREF(__pyx_t_12);
@@ -5730,7 +5723,7 @@ if (!__Pyx_RefNanny) {
                 __Pyx_XGIVEREF(__pyx_t_14);
                 __Pyx_ErrRestoreWithState(__pyx_t_12, __pyx_t_7, __pyx_t_14);
                 __pyx_t_12 = 0; __pyx_t_7 = 0; __pyx_t_14 = 0; 
-                __PYX_ERR(0, 166, __pyx_L27_except_error)
+                __PYX_ERR(0, 167, __pyx_L27_except_error)
               }
               __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
               __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
@@ -5762,7 +5755,7 @@ if (!__Pyx_RefNanny) {
             if (__pyx_t_4) {
               __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_tuple__7, NULL);
               __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-              if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 166, __pyx_L1_error)
+              if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 167, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_15);
               __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
             }
@@ -5772,7 +5765,7 @@ if (!__Pyx_RefNanny) {
             if (__pyx_t_4) {
               __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_tuple__7, NULL);
               __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-              if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 166, __pyx_L1_error)
+              if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 167, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_15);
               __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
             }
@@ -5787,7 +5780,7 @@ if (!__Pyx_RefNanny) {
         __pyx_L40:;
       }
 
-      /* "plutus.py":164
+      /* "plutus.py":165
  *     _HALF = _COUNT // 2
  *     _QUARTER = _HALF // 2
  *     for c, p in enumerate(os.listdir(DATABASE)):             # <<<<<<<<<<<<<<
@@ -5799,26 +5792,26 @@ if (!__Pyx_RefNanny) {
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "plutus.py":180
+    /* "plutus.py":181
  *                 else:
  *                     _DATABASE[3] = _DATABASE[3] | pickle.load(file)
  *     print('DONE')             # <<<<<<<<<<<<<<
  * 
  *     # To verify the database size, remove the # from the line below
  */
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__22, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 180, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__22, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 181, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "plutus.py":185
+    /* "plutus.py":186
  *     # print('database size: ' + str(sum(len(i) for i in _DATABASE))); quit()
  * 
  *     for cpu in range(multiprocessing.cpu_count()):             # <<<<<<<<<<<<<<
  *         multiprocessing.Process(target=main, args=(_DATABASE, )).start()
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_multiprocessing); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 185, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_multiprocessing); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 186, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_cpu_count); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 185, __pyx_L1_error)
+    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_cpu_count); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 186, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_14);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     __pyx_t_8 = NULL;
@@ -5833,19 +5826,19 @@ if (!__Pyx_RefNanny) {
     }
     __pyx_t_1 = (__pyx_t_8) ? __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_t_8) : __Pyx_PyObject_CallNoArg(__pyx_t_14);
     __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 185, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 186, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-    __pyx_t_14 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 185, __pyx_L1_error)
+    __pyx_t_14 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 186, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_14);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (likely(PyList_CheckExact(__pyx_t_14)) || PyTuple_CheckExact(__pyx_t_14)) {
       __pyx_t_1 = __pyx_t_14; __Pyx_INCREF(__pyx_t_1); __pyx_t_11 = 0;
       __pyx_t_13 = NULL;
     } else {
-      __pyx_t_11 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_t_14); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 185, __pyx_L1_error)
+      __pyx_t_11 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_t_14); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 186, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_13 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 185, __pyx_L1_error)
+      __pyx_t_13 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 186, __pyx_L1_error)
     }
     __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
     for (;;) {
@@ -5853,17 +5846,17 @@ if (!__Pyx_RefNanny) {
         if (likely(PyList_CheckExact(__pyx_t_1))) {
           if (__pyx_t_11 >= PyList_GET_SIZE(__pyx_t_1)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_14 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_11); __Pyx_INCREF(__pyx_t_14); __pyx_t_11++; if (unlikely(0 < 0)) __PYX_ERR(0, 185, __pyx_L1_error)
+          __pyx_t_14 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_11); __Pyx_INCREF(__pyx_t_14); __pyx_t_11++; if (unlikely(0 < 0)) __PYX_ERR(0, 186, __pyx_L1_error)
           #else
-          __pyx_t_14 = PySequence_ITEM(__pyx_t_1, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 185, __pyx_L1_error)
+          __pyx_t_14 = PySequence_ITEM(__pyx_t_1, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 186, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_14);
           #endif
         } else {
           if (__pyx_t_11 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_14 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_11); __Pyx_INCREF(__pyx_t_14); __pyx_t_11++; if (unlikely(0 < 0)) __PYX_ERR(0, 185, __pyx_L1_error)
+          __pyx_t_14 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_11); __Pyx_INCREF(__pyx_t_14); __pyx_t_11++; if (unlikely(0 < 0)) __PYX_ERR(0, 186, __pyx_L1_error)
           #else
-          __pyx_t_14 = PySequence_ITEM(__pyx_t_1, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 185, __pyx_L1_error)
+          __pyx_t_14 = PySequence_ITEM(__pyx_t_1, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 186, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_14);
           #endif
         }
@@ -5873,45 +5866,45 @@ if (!__Pyx_RefNanny) {
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(0, 185, __pyx_L1_error)
+            else __PYX_ERR(0, 186, __pyx_L1_error)
           }
           break;
         }
         __Pyx_GOTREF(__pyx_t_14);
       }
-      if (PyDict_SetItem(__pyx_d, __pyx_n_s_cpu, __pyx_t_14) < 0) __PYX_ERR(0, 185, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_d, __pyx_n_s_cpu, __pyx_t_14) < 0) __PYX_ERR(0, 186, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
 
-      /* "plutus.py":186
+      /* "plutus.py":187
  * 
  *     for cpu in range(multiprocessing.cpu_count()):
  *         multiprocessing.Process(target=main, args=(_DATABASE, )).start()             # <<<<<<<<<<<<<<
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_multiprocessing); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 186, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_multiprocessing); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_Process); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 186, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_Process); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_8 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 186, __pyx_L1_error)
+      __pyx_t_8 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
-      __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_main_2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 186, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_main_2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_target, __pyx_t_12) < 0) __PYX_ERR(0, 186, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_target, __pyx_t_12) < 0) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 186, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_DATABASE_2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_6 = PyTuple_New(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 186, __pyx_L1_error)
+      __pyx_t_6 = PyTuple_New(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GIVEREF(__pyx_t_12);
       PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_12);
       __pyx_t_12 = 0;
-      if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_args, __pyx_t_6) < 0) __PYX_ERR(0, 186, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_args, __pyx_t_6) < 0) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_empty_tuple, __pyx_t_8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 186, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_empty_tuple, __pyx_t_8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_start); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 186, __pyx_L1_error)
+      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_start); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_t_6 = NULL;
@@ -5926,12 +5919,12 @@ if (!__Pyx_RefNanny) {
       }
       __pyx_t_14 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_8);
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 186, __pyx_L1_error)
+      if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_14);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
       __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
 
-      /* "plutus.py":185
+      /* "plutus.py":186
  *     # print('database size: ' + str(sum(len(i) for i in _DATABASE))); quit()
  * 
  *     for cpu in range(multiprocessing.cpu_count()):             # <<<<<<<<<<<<<<
@@ -5940,7 +5933,7 @@ if (!__Pyx_RefNanny) {
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "plutus.py":153
+    /* "plutus.py":154
  * 
  * 
  * if __name__ == '__main__':             # <<<<<<<<<<<<<<
@@ -6940,31 +6933,6 @@ static CYTHON_INLINE void __Pyx__ExceptionReset(PyThreadState *tstate, PyObject 
 }
 #endif
 
-/* PyErrExceptionMatches */
-#if CYTHON_FAST_THREAD_STATE
-static int __Pyx_PyErr_ExceptionMatchesTuple(PyObject *exc_type, PyObject *tuple) {
-    Py_ssize_t i, n;
-    n = PyTuple_GET_SIZE(tuple);
-#if PY_MAJOR_VERSION >= 3
-    for (i=0; i<n; i++) {
-        if (exc_type == PyTuple_GET_ITEM(tuple, i)) return 1;
-    }
-#endif
-    for (i=0; i<n; i++) {
-        if (__Pyx_PyErr_GivenExceptionMatches(exc_type, PyTuple_GET_ITEM(tuple, i))) return 1;
-    }
-    return 0;
-}
-static CYTHON_INLINE int __Pyx_PyErr_ExceptionMatchesInState(PyThreadState* tstate, PyObject* err) {
-    PyObject *exc_type = tstate->curexc_type;
-    if (exc_type == err) return 1;
-    if (unlikely(!exc_type)) return 0;
-    if (unlikely(PyTuple_Check(err)))
-        return __Pyx_PyErr_ExceptionMatchesTuple(exc_type, err);
-    return __Pyx_PyErr_GivenExceptionMatches(exc_type, err);
-}
-#endif
-
 /* GetException */
 #if CYTHON_FAST_THREAD_STATE
 static int __Pyx__GetException(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb)
@@ -7527,6 +7495,31 @@ bad:
     Py_XDECREF(empty_dict);
     return module;
 }
+
+/* PyErrExceptionMatches */
+#if CYTHON_FAST_THREAD_STATE
+static int __Pyx_PyErr_ExceptionMatchesTuple(PyObject *exc_type, PyObject *tuple) {
+    Py_ssize_t i, n;
+    n = PyTuple_GET_SIZE(tuple);
+#if PY_MAJOR_VERSION >= 3
+    for (i=0; i<n; i++) {
+        if (exc_type == PyTuple_GET_ITEM(tuple, i)) return 1;
+    }
+#endif
+    for (i=0; i<n; i++) {
+        if (__Pyx_PyErr_GivenExceptionMatches(exc_type, PyTuple_GET_ITEM(tuple, i))) return 1;
+    }
+    return 0;
+}
+static CYTHON_INLINE int __Pyx_PyErr_ExceptionMatchesInState(PyThreadState* tstate, PyObject* err) {
+    PyObject *exc_type = tstate->curexc_type;
+    if (exc_type == err) return 1;
+    if (unlikely(!exc_type)) return 0;
+    if (unlikely(PyTuple_Check(err)))
+        return __Pyx_PyErr_ExceptionMatchesTuple(exc_type, err);
+    return __Pyx_PyErr_GivenExceptionMatches(exc_type, err);
+}
+#endif
 
 /* ImportFrom */
 static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name) {

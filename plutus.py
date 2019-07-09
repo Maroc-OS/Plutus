@@ -22,6 +22,7 @@ import multiprocessing
 # using fastecdsa instead of starkbank
 from fastecdsa import curve, keys
 
+
 DATABASE = r'database/JUL_06_2019/'
 
 
@@ -71,7 +72,7 @@ def public_key_to_address(public_key):
         for _i in range(_count):
             output.append(alphabet[0])
         return ''.join(output[::-1])
-    except SyntaxError:
+    except:
         # Skip if public_key gen caused an error - I think this happens
         # because urandom was smaller than 32 bytes?
         return -1
@@ -99,7 +100,7 @@ def process(private_key, public_key, address, _database):
         # Is printing every address slowing the process down since it has to
         # write to STDOUT?
         # print(str(private_key),":",str(address))
-        print('\r' + str(address), end="")
+        print('\r' + str(address), end='', flush=True)
 
 
 def private_key_to_wif(private_key):
@@ -115,8 +116,8 @@ def private_key_to_wif(private_key):
     alphabet = chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
     value = pad = 0
     result = ''
-    for i, _c in enumerate(var[::-1]):
-        value += 256**i * _c
+    for _i, _c in enumerate(var[::-1]):
+        value += 256**_i * _c
     while value >= len(alphabet):
         div, mod = divmod(value, len(alphabet))
         result, value = chars[mod] + result, div
