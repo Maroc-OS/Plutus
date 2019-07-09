@@ -11,6 +11,7 @@
 # https://github.com/AirShark/Plutus
 
 import os
+import sys
 try:
     import cPickle as pickle
 except ImportError:
@@ -18,10 +19,13 @@ except ImportError:
 import hashlib
 import binascii
 import multiprocessing
+import itertools
 
 # using fastecdsa instead of starkbank
 from fastecdsa import curve, keys
 
+
+SPINNER = itertools.cycle('-/|\\')
 
 DATABASE = r'database/JUL_06_2019/'
 
@@ -164,6 +168,10 @@ if __name__ == '__main__':
     _QUARTER = _HALF // 2
     for c, p in enumerate(os.listdir(DATABASE)):
         print('\rreading database: ' + str(c + 1) + '/' + str(_COUNT), end=' ')
+        sys.stdout.write(next(SPINNER))
+        sys.stdout.flush()
+        sys.stdout.write('\b')
+
         with open(DATABASE + p, 'rb') as file:
             if c + 1 == 21:  # HOOK
                 _DATABASE[4] = _DATABASE[4] | pickle.load(file)  # HOOK
